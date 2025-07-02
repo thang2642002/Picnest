@@ -4,7 +4,13 @@ const route = Router();
 
 route.get("/get-all-categories", categoriesController.getAllCategories);
 route.post("/create-categories", categoriesController.createCategories);
-route.post("/update-categories", categoriesController.updateCategories);
-route.delete("/delete-categories", categoriesController.deleteCategories);
+route.put(
+  "/update-categories/:categories_id",
+  categoriesController.updateCategories
+);
+route.delete(
+  "/delete-categories/:categories_id",
+  categoriesController.deleteCategories
+);
 
 export default route;

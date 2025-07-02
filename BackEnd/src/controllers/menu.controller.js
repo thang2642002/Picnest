@@ -7,6 +7,7 @@ const getAllMenu = async (req, res) => {
       return res.status(200).json({
         errCode: 0,
         message: "Lấy menu thành công",
+        data: data,
       });
     } else {
       return res.status(400).json({

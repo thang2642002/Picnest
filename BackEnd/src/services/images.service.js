@@ -1,5 +1,3 @@
-import db from "../models/index.cjs";
-
 const getAllImage = () => {};
 
 const createImage = () => {};

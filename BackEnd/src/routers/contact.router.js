@@ -4,6 +4,6 @@ const route = Router();
 
 route.get("/get-all-contact", contactController.getAllContact);
 route.post("/create-contact", contactController.createContact);
-route.delete("/delete-contact", contactController.deleteContact);
+route.delete("/delete-contact/:contact_id", contactController.deleteContact);
 
 export default route;

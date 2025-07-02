@@ -1,4 +1,4 @@
-import categoriesServices from "../controllers/categories.controller.js";
+import categoriesServices from "../services/categories.service.js";
 
 const getAllCategories = async (req, res) => {
   try {
@@ -7,6 +7,7 @@ const getAllCategories = async (req, res) => {
       return res.status(200).json({
         errCode: 0,
         message: "Lấy thể loại thành công",
+        data: data,
       });
     } else {
       return res.status(400).json({
