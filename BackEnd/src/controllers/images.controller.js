@@ -7,6 +7,7 @@ const getAllImage = async (req, res) => {
       return res.status(200).json({
         errCode: 0,
         message: "Lấy ảnh thành công",
+        data: data,
       });
     } else {
       return res.status(400).json({
@@ -25,8 +26,10 @@ const getAllImage = async (req, res) => {
 
 const createImage = async (req, res) => {
   try {
-    const { url, title, categories_id } = req.body;
-    const data = await imageService.createImage(url, title, categories_id);
+    const { title, categories_id } = req.body;
+    const file = req.file;
+    const data = await imageService.createImage(file, title, categories_id);
+
     if (data) {
       return res.status(200).json({
         errCode: 0,
@@ -39,24 +42,60 @@ const createImage = async (req, res) => {
       });
     }
   } catch (error) {
-    console.log("Lỗi: ", error);
+    console.error("Lỗi Controller:", error);
     return res.status(500).json({
       errCode: -1,
-      message: "Lỗi Server",
+      message: error.message || "Lỗi Server",
     });
   }
 };
 
+// const updateImage = async (req, res) => {
+//   try {
+//     const { image_id } = req.params;
+//     const { title, categories_id } = req.body;
+//     const file = req.file;
+
+//     const data = await imageService.updateImage(
+//       image_id,
+//       file,
+//       title,
+//       categories_id
+//     );
+
+//     if (data) {
+//       return res.status(200).json({
+//         errCode: 0,
+//         message: "Thay đổi ảnh thành công",
+//       });
+//     } else {
+//       return res.status(400).json({
+//         errCode: 1,
+//         message: "Thay đổi ảnh thất bại",
+//       });
+//     }
+//   } catch (error) {
+//     console.error("Lỗi Controller updateImage:", error);
+//     return res.status(500).json({
+//       errCode: -1,
+//       message: "Lỗi Server: " + error.message,
+//     });
+//   }
+// };
+
 const updateImage = async (req, res) => {
   try {
     const { image_id } = req.params;
-    const { url, title, categories_id } = req.body;
+    const { title, categories_id } = req.body;
+    const file = req.file;
+
     const data = await imageService.updateImage(
       image_id,
-      url,
+      file,
       title,
       categories_id
     );
+
     if (data) {
       return res.status(200).json({
         errCode: 0,
@@ -69,10 +108,10 @@ const updateImage = async (req, res) => {
       });
     }
   } catch (error) {
-    console.log("Lỗi: ", error);
+    console.error("Lỗi Controller updateImage:", error);
     return res.status(500).json({
       errCode: -1,
-      message: "Lỗi Server",
+      message: "Lỗi Server: " + error.message,
     });
   }
 };
@@ -85,12 +124,12 @@ const deleteImage = async (req, res) => {
     if (data) {
       return res.status(200).json({
         errCode: 0,
-        message: "Xóa menu thành công",
+        message: "Xóa ảnh thành công",
       });
     } else {
       return res.status(400).json({
         errCode: 1,
-        message: "Xóa menu thất bại",
+        message: "Xóa ảnh thất bại",
       });
     }
   } catch (error) {
