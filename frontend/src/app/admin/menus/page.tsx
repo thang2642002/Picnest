@@ -11,8 +11,9 @@ import {
   message,
 } from "antd";
 import { PlusOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
-
+import ModalCreateMenu from "./modelCreateMenu/page";
 const { Title } = Typography;
+import { useState } from "react";
 
 const data = [
   {
@@ -30,6 +31,7 @@ const data = [
 ];
 
 export default function UserPage() {
+  const [show, setShow] = useState<boolean>(false);
   const handleDelete = (key: string) => {
     message.success(`Đã xóa người dùng có ID: ${key}`);
     // TODO: gọi API xóa ở đây
@@ -83,7 +85,12 @@ export default function UserPage() {
           </Title>
         </Col>
         <Col>
-          <Button type="primary" icon={<PlusOutlined />} size="middle">
+          <Button
+            type="primary"
+            icon={<PlusOutlined />}
+            size="middle"
+            onClick={() => setShow(true)}
+          >
             Thêm menu mới
           </Button>
         </Col>
@@ -95,6 +102,7 @@ export default function UserPage() {
         pagination={{ pageSize: 5 }}
         bordered
       />
+      <ModalCreateMenu show={show} setShow={setShow} />
     </div>
   );
 }
