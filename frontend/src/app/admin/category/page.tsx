@@ -11,7 +11,8 @@ import {
   message,
 } from "antd";
 import { PlusOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
-
+import ModalCreateCategory from "./modalCreateCategory/page";
+import { useState } from "react";
 const { Title } = Typography;
 
 const data = [
@@ -32,6 +33,7 @@ const data = [
 ];
 
 export default function Category() {
+  const [show, setShow] = useState<boolean>(false);
   const handleDelete = (key: string) => {
     message.success(`Đã xóa người dùng có ID: ${key}`);
     // TODO: gọi API xóa ở đây
@@ -90,7 +92,12 @@ export default function Category() {
           </Title>
         </Col>
         <Col>
-          <Button type="primary" icon={<PlusOutlined />} size="middle">
+          <Button
+            type="primary"
+            icon={<PlusOutlined />}
+            size="middle"
+            onClick={() => setShow(true)}
+          >
             Thêm thể loại mới
           </Button>
         </Col>
@@ -102,6 +109,7 @@ export default function Category() {
         pagination={{ pageSize: 5 }}
         bordered
       />
+      <ModalCreateCategory show={show} setShow={setShow} />
     </div>
   );
 }

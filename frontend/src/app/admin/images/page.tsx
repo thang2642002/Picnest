@@ -11,7 +11,8 @@ import {
   message,
 } from "antd";
 import { PlusOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
-
+import ModalCreateImage from "./ModalCreateImage/page";
+import { useState } from "react";
 const { Title } = Typography;
 
 const data = [
@@ -32,6 +33,25 @@ const data = [
 ];
 
 export default function Image() {
+  const [show, setShow] = useState<boolean>(false);
+  const [images, setImages] = useState<any[]>([]); // ✅ Dữ liệu ảnh động
+  // ✅ Xử lý thêm ảnh từ Modal
+  const onCreateImages = (
+    newImages: {
+      url: string;
+      title: string;
+      category_id: string;
+    }[]
+  ) => {
+    const enhancedImages = newImages.map((img, index) => ({
+      ...img,
+      id: `IMG-${Date.now()}-${index}`, // tạo ID tạm
+      key: `IMG-${Date.now()}-${index}`,
+    }));
+
+    setImages((prev) => [...enhancedImages, ...prev]); // thêm vào danh sách
+    message.success("Đã thêm ảnh thành công!");
+  };
   const handleDelete = (key: string) => {
     message.success(`Đã xóa ảnh có ID: ${key}`);
     // TODO: gọi API xóa ở đây
@@ -90,7 +110,12 @@ export default function Image() {
           </Title>
         </Col>
         <Col>
-          <Button type="primary" icon={<PlusOutlined />} size="middle">
+          <Button
+            type="primary"
+            icon={<PlusOutlined />}
+            size="middle"
+            onClick={() => setShow(true)}
+          >
             Thêm ảnh mới
           </Button>
         </Col>
@@ -101,6 +126,11 @@ export default function Image() {
         dataSource={data}
         pagination={{ pageSize: 5 }}
         bordered
+      />
+      <ModalCreateImage
+        show={show}
+        setShow={setShow}
+        onCreateImages={onCreateImages}
       />
     </div>
   );
