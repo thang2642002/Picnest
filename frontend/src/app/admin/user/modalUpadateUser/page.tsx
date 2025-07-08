@@ -8,12 +8,13 @@ interface MenuModalProps {
   setShow: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const ModalCreateCategory: React.FC<MenuModalProps> = ({ show, setShow }) => {
+const ModalUpdateUser: React.FC<MenuModalProps> = ({ show, setShow }) => {
   const { Option } = Select;
   const [loading, setLoading] = useState<boolean>(false);
   const [name, setName] = useState<string>("");
-  const [slug, setSlug] = useState<string>("");
-  const [menuId, setMenuId] = useState<string>("Menu1");
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [role, setRole] = useState<string>("Admin");
 
   const handleCancel = () => {
     setShow(false);
@@ -22,9 +23,9 @@ const ModalCreateCategory: React.FC<MenuModalProps> = ({ show, setShow }) => {
   const handleOk = async () => {
     try {
       console.log("name", name);
-      console.log("slug", slug);
-      console.log("slug", menuId);
-
+      console.log("email", email);
+      console.log("password", password);
+      console.log("role", role);
       setShow(false);
     } catch (err) {
       console.error("Lỗi:", err);
@@ -32,12 +33,12 @@ const ModalCreateCategory: React.FC<MenuModalProps> = ({ show, setShow }) => {
   };
   return (
     <Modal
-      title="Thêm thể loại mới"
+      title="Chỉnh sửa quản trị viên"
       open={show}
       onOk={handleOk}
       onCancel={handleCancel}
       confirmLoading={loading}
-      okText="Tạo"
+      okText="Chỉnh sửa"
       cancelText="Hủy"
     >
       <Form layout="vertical">
@@ -45,25 +46,30 @@ const ModalCreateCategory: React.FC<MenuModalProps> = ({ show, setShow }) => {
           <Input
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="Nhập tên thể loại..."
+            placeholder="Nhập tên quản trị..."
           />
         </Form.Item>
-        <Form.Item label="Slug">
+        <Form.Item label="Email">
           <Input
-            value={slug}
-            onChange={(e) => setSlug(e.target.value)}
-            placeholder="Nhập sulg..."
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Nhập email..."
           />
         </Form.Item>
-        <Form.Item label="Menu">
+        <Form.Item label="Mật khẩu">
+          <Input
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Nhập mật khẩu..."
+          />
+        </Form.Item>
+        <Form.Item label="Quyền">
           <Select
-            value={menuId}
-            onChange={(value) => setMenuId(value)}
-            placeholder="Chọn menu..."
+            value={role}
+            onChange={(value) => setRole(value)}
+            placeholder="Chọn quyền..."
           >
-            <Option value="menu1">Menu1</Option>
-            <Option value="menu2">Menu2</Option>
-            <Option value="menu3">Menu3</Option>
+            <Option value="Admin">Admin</Option>
           </Select>
         </Form.Item>
       </Form>
@@ -71,4 +77,4 @@ const ModalCreateCategory: React.FC<MenuModalProps> = ({ show, setShow }) => {
   );
 };
 
-export default ModalCreateCategory;
+export default ModalUpdateUser;

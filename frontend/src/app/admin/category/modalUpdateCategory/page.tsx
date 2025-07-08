@@ -8,7 +8,7 @@ interface MenuModalProps {
   setShow: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const ModalCreateCategory: React.FC<MenuModalProps> = ({ show, setShow }) => {
+const ModalUpdateCategory: React.FC<MenuModalProps> = ({ show, setShow }) => {
   const { Option } = Select;
   const [loading, setLoading] = useState<boolean>(false);
   const [name, setName] = useState<string>("");
@@ -23,7 +23,7 @@ const ModalCreateCategory: React.FC<MenuModalProps> = ({ show, setShow }) => {
     try {
       console.log("name", name);
       console.log("slug", slug);
-      console.log("slug", menuId);
+      console.log("menuId", menuId);
 
       setShow(false);
     } catch (err) {
@@ -32,16 +32,16 @@ const ModalCreateCategory: React.FC<MenuModalProps> = ({ show, setShow }) => {
   };
   return (
     <Modal
-      title="Thêm thể loại mới"
+      title="Chỉnh sửa thể loại"
       open={show}
       onOk={handleOk}
       onCancel={handleCancel}
       confirmLoading={loading}
-      okText="Tạo"
+      okText="chỉnh sửa"
       cancelText="Hủy"
     >
       <Form layout="vertical">
-        <Form.Item label="Tên quản trị">
+        <Form.Item label="Tên thể loại">
           <Input
             value={name}
             onChange={(e) => setName(e.target.value)}
@@ -71,4 +71,4 @@ const ModalCreateCategory: React.FC<MenuModalProps> = ({ show, setShow }) => {
   );
 };
 
-export default ModalCreateCategory;
+export default ModalUpdateCategory;

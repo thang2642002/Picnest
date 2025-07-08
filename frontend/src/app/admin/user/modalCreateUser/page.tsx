@@ -8,7 +8,7 @@ interface MenuModalProps {
   setShow: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const UserModal: React.FC<MenuModalProps> = ({ show, setShow }) => {
+const ModalCreateUser: React.FC<MenuModalProps> = ({ show, setShow }) => {
   const { Option } = Select;
   const [loading, setLoading] = useState<boolean>(false);
   const [name, setName] = useState<string>("");
@@ -77,4 +77,4 @@ const UserModal: React.FC<MenuModalProps> = ({ show, setShow }) => {
   );
 };
 
-export default UserModal;
+export default ModalCreateUser;

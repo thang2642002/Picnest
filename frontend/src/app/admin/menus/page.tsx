@@ -11,7 +11,8 @@ import {
   message,
 } from "antd";
 import { PlusOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
-import ModalCreateMenu from "./modelCreateMenu/page";
+import ModalCreateMenu from "./modalCreateMenu/page";
+import ModalUpdateMenu from "./modalUpdateMenu/page";
 const { Title } = Typography;
 import { useState } from "react";
 
@@ -31,7 +32,10 @@ const data = [
 ];
 
 export default function UserPage() {
-  const [show, setShow] = useState<boolean>(false);
+  const [showModalCreateMenu, setShowModalCreateMenu] =
+    useState<boolean>(false);
+  const [showModalUpdateMenu, setShowModalUpdateMenu] =
+    useState<boolean>(false);
   const handleDelete = (key: string) => {
     message.success(`Đã xóa người dùng có ID: ${key}`);
     // TODO: gọi API xóa ở đây
@@ -58,7 +62,12 @@ export default function UserPage() {
       key: "action",
       render: (_: any, record: any) => (
         <Space size="middle">
-          <Button icon={<EditOutlined />} type="primary" size="small">
+          <Button
+            icon={<EditOutlined />}
+            type="primary"
+            size="small"
+            onClick={() => setShowModalUpdateMenu(true)}
+          >
             Cập nhật
           </Button>
           <Popconfirm
@@ -89,7 +98,7 @@ export default function UserPage() {
             type="primary"
             icon={<PlusOutlined />}
             size="middle"
-            onClick={() => setShow(true)}
+            onClick={() => setShowModalCreateMenu(true)}
           >
             Thêm menu mới
           </Button>
@@ -102,7 +111,14 @@ export default function UserPage() {
         pagination={{ pageSize: 5 }}
         bordered
       />
-      <ModalCreateMenu show={show} setShow={setShow} />
+      <ModalCreateMenu
+        show={showModalCreateMenu}
+        setShow={setShowModalCreateMenu}
+      />
+      <ModalUpdateMenu
+        show={showModalUpdateMenu}
+        setShow={setShowModalUpdateMenu}
+      />
     </div>
   );
 }

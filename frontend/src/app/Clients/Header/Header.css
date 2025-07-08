@@ -1,0 +1,177 @@
+/* ----------- DESKTOP ----------- */
+.header-container {
+  background: black;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 40px;
+  color: white;
+  font-family: sans-serif;
+  position: relative;
+  z-index: 100;
+}
+
+.logo {
+  font-weight: bold;
+  font-size: 20px;
+}
+
+/* Menu ngang */
+.menu-wrapper {
+  display: flex;
+  gap: 32px;
+  position: relative;
+}
+
+.menu-item {
+  position: relative;
+  font-weight: bold;
+  text-transform: uppercase;
+  cursor: pointer;
+  padding: 6px 0;
+  position: relative;
+}
+
+/* Gạch chân khi hover */
+.menu-item::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 2px;
+  width: 0%;
+  background: white;
+  transition: width 0.3s ease;
+}
+
+.menu-item:hover::after {
+  width: 100%;
+}
+
+/* Dropdown con */
+.menu-item:hover .dropdown {
+  display: block;
+}
+
+.dropdown {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  min-width: 160px;
+  background-color: rgba(0, 0, 0, 0.95);
+  padding: 12px 0;
+  z-index: 1000;
+  text-align: left;
+}
+
+.dropdown-item {
+  color: white;
+  padding: 8px 20px;
+  font-weight: bold;
+  font-size: 14px;
+  text-transform: uppercase;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.dropdown-item:hover {
+  color: #ddd;
+  background: transparent;
+  border: none;
+}
+
+/* Social icons desktop */
+.social-icons {
+  display: flex;
+  gap: 20px;
+  font-size: 18px;
+}
+
+.social-icons .icon {
+  cursor: pointer;
+  font-size: 20px;
+}
+
+/* Icon hamburger (ẩn desktop) */
+.mobile-menu-icon {
+  display: none;
+}
+
+/* ----------- MOBILE + TABLET ----------- */
+@media (max-width: 768px) {
+  /* Ẩn menu + icons desktop */
+  .menu-wrapper {
+    display: none;
+  }
+
+  .social-icons {
+    display: none;
+  }
+
+  /* Hiện icon menu */
+  .mobile-menu-icon {
+    display: block;
+    font-size: 24px;
+    color: white;
+    cursor: pointer;
+  }
+
+  .header-container {
+    padding: 12px 20px;
+  }
+
+  .drawer-close-icon {
+    margin-left: 12rem;
+    font-size: 25px;
+  }
+
+  /* Drawer cho mobile */
+  .mobile-drawer {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 260px;
+    height: 100vh;
+    background-color: #000;
+    color: white;
+    padding: 20px;
+    transition: right 0.3s ease;
+    z-index: 999;
+    overflow-y: auto;
+  }
+
+  .mobile-drawer.open {
+    right: 0;
+  }
+
+  .mobile-menu-title {
+    font-weight: bold;
+    text-transform: uppercase;
+    margin: 16px 0 8px;
+    border-bottom: 1px solid #444;
+    padding-bottom: 6px;
+  }
+
+  .mobile-submenu {
+    padding-left: 10px;
+  }
+
+  .mobile-subitem {
+    padding: 6px 0;
+    text-transform: uppercase;
+    font-size: 14px;
+    color: #ccc;
+  }
+
+  .mobile-social-icons {
+    margin-top: 24px;
+    display: flex;
+    gap: 35px;
+    font-size: 20px;
+  }
+
+  .mobile-social-icons .icon {
+    font-size: 25px;
+  }
+}

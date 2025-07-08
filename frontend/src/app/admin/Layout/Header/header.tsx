@@ -1,6 +1,6 @@
 "use client";
 
-import { Layout, Menu, Drawer, Button, Avatar, Grid } from "antd";
+import { Layout, Menu, Drawer, Button, Avatar, Grid, Spin } from "antd";
 import {
   MenuOutlined,
   UserOutlined,
@@ -19,9 +19,11 @@ const { Header } = Layout;
 const { useBreakpoint } = Grid;
 
 const AdminHeader = () => {
-  const [open, setOpen] = useState(false);
   const screens = useBreakpoint();
   const router = useRouter();
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+
   const menuItems = [
     {
       key: "dashboard",
@@ -92,10 +94,12 @@ const AdminHeader = () => {
         router.push("/admin/profile");
         break;
     }
+    setLoading(false);
   };
 
   return (
     <>
+      {loading && <Spin tip="Đang chuyển trang..." />}
       <Header
         style={{
           background: "#fff",

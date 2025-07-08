@@ -8,7 +8,7 @@ interface MenuModalProps {
   setShow: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const MenuModal: React.FC<MenuModalProps> = ({ show, setShow }) => {
+const ModalUpdateMenu: React.FC<MenuModalProps> = ({ show, setShow }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [name, setName] = useState<string>("");
   const [slug, setSlug] = useState<string>("");
@@ -28,12 +28,12 @@ const MenuModal: React.FC<MenuModalProps> = ({ show, setShow }) => {
   };
   return (
     <Modal
-      title="Thêm Menu Mới"
+      title="Chỉnh sửa menu"
       open={show}
       onOk={handleOk}
       onCancel={handleCancel}
       confirmLoading={loading}
-      okText="Tạo"
+      okText="Chỉnh sửa"
       cancelText="Hủy"
     >
       <Form layout="vertical">
@@ -56,4 +56,4 @@ const MenuModal: React.FC<MenuModalProps> = ({ show, setShow }) => {
   );
 };
 
-export default MenuModal;
+export default ModalUpdateMenu;

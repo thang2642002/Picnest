@@ -12,6 +12,7 @@ import {
 } from "antd";
 import { PlusOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import ModalCreateImage from "./ModalCreateImage/page";
+import ModalUpdateImage from "./ModalUpdateImage/page";
 import { useState } from "react";
 const { Title } = Typography;
 
@@ -33,7 +34,10 @@ const data = [
 ];
 
 export default function Image() {
-  const [show, setShow] = useState<boolean>(false);
+  const [showModalCreateImage, setShowModalCreateImage] =
+    useState<boolean>(false);
+  const [showModalUpdateImage, setShowModalUpdateImage] =
+    useState<boolean>(false);
   const [images, setImages] = useState<any[]>([]); // ✅ Dữ liệu ảnh động
   // ✅ Xử lý thêm ảnh từ Modal
   const onCreateImages = (
@@ -83,7 +87,12 @@ export default function Image() {
       key: "action",
       render: (_: any, record: any) => (
         <Space size="middle">
-          <Button icon={<EditOutlined />} type="primary" size="small">
+          <Button
+            icon={<EditOutlined />}
+            type="primary"
+            size="small"
+            onClick={() => setShowModalUpdateImage(true)}
+          >
             Cập nhật
           </Button>
           <Popconfirm
@@ -114,7 +123,7 @@ export default function Image() {
             type="primary"
             icon={<PlusOutlined />}
             size="middle"
-            onClick={() => setShow(true)}
+            onClick={() => setShowModalCreateImage(true)}
           >
             Thêm ảnh mới
           </Button>
@@ -128,8 +137,14 @@ export default function Image() {
         bordered
       />
       <ModalCreateImage
-        show={show}
-        setShow={setShow}
+        show={showModalCreateImage}
+        setShow={setShowModalCreateImage}
+        onCreateImages={onCreateImages}
+      />
+
+      <ModalUpdateImage
+        show={showModalUpdateImage}
+        setShow={setShowModalUpdateImage}
         onCreateImages={onCreateImages}
       />
     </div>

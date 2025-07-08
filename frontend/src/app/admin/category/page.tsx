@@ -12,6 +12,7 @@ import {
 } from "antd";
 import { PlusOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import ModalCreateCategory from "./modalCreateCategory/page";
+import ModalUpdateCategory from "./modalUpdateCategory/page";
 import { useState } from "react";
 const { Title } = Typography;
 
@@ -33,7 +34,10 @@ const data = [
 ];
 
 export default function Category() {
-  const [show, setShow] = useState<boolean>(false);
+  const [showModalCreateCategory, setShowModalCreateCategory] =
+    useState<boolean>(false);
+  const [showModalUpdateCategory, setShowModalUpdateCategory] =
+    useState<boolean>(false);
   const handleDelete = (key: string) => {
     message.success(`Đã xóa người dùng có ID: ${key}`);
     // TODO: gọi API xóa ở đây
@@ -65,7 +69,12 @@ export default function Category() {
       key: "action",
       render: (_: any, record: any) => (
         <Space size="middle">
-          <Button icon={<EditOutlined />} type="primary" size="small">
+          <Button
+            icon={<EditOutlined />}
+            type="primary"
+            size="small"
+            onClick={() => setShowModalUpdateCategory(true)}
+          >
             Cập nhật
           </Button>
           <Popconfirm
@@ -96,7 +105,7 @@ export default function Category() {
             type="primary"
             icon={<PlusOutlined />}
             size="middle"
-            onClick={() => setShow(true)}
+            onClick={() => setShowModalCreateCategory(true)}
           >
             Thêm thể loại mới
           </Button>
@@ -109,7 +118,14 @@ export default function Category() {
         pagination={{ pageSize: 5 }}
         bordered
       />
-      <ModalCreateCategory show={show} setShow={setShow} />
+      <ModalCreateCategory
+        show={showModalCreateCategory}
+        setShow={setShowModalCreateCategory}
+      />
+      <ModalUpdateCategory
+        show={showModalUpdateCategory}
+        setShow={setShowModalUpdateCategory}
+      />
     </div>
   );
 }
