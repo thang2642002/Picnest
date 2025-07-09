@@ -8,18 +8,19 @@ type ContainerProps = {
 
 export default function Container({ children }: ContainerProps) {
   return (
-    <Row justify="center">
-      <Col span={24}>
-        <div
-          style={{
-            maxWidth: 1280,
-            margin: "0 auto",
-            padding: "0 24px",
-          }}
-        >
-          {children}
-        </div>
-      </Col>
-    </Row>
+    <div style={{ backgroundColor: "#000" }}>
+      <Row justify="center">
+        <Col span={24}>
+          <div
+            style={{
+              margin: "0 auto",
+              padding: "0 10px",
+            }}
+          >
+            {children}
+          </div>
+        </Col>
+      </Row>
+    </div>
   );
 }

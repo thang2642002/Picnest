@@ -34,6 +34,25 @@ a {
   color: inherit;
   text-decoration: none;
 }
+/* css header */
+.sticky-header {
+  position: sticky;
+  top: 0;
+  z-index: 999;
+}
+/* Css page home */
+
+.container-home .title-home {
+  text-align: center;
+  color: #afb1a2;
+  font-size: 5rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  padding: 50px 0;
+}
+.container-home .title-home span {
+  color: red;
+}
 
 @media (prefers-color-scheme: dark) {
   html {
