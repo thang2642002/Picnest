@@ -10,6 +10,7 @@ import {
   faYoutube,
 } from "@fortawesome/free-brands-svg-icons";
 import { faBars, faXmark } from "@fortawesome/free-solid-svg-icons";
+import { useRouter } from "next/navigation";
 
 const menuItems = [
   {
@@ -55,9 +56,20 @@ const menuItems = [
 ];
 
 const CustomHeader = () => {
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [activeMobileMenu, setActiveMobileMenu] = useState<string | null>(null);
+
+  function slugify(str: string) {
+    return str
+      .normalize("NFD") // tách dấu
+      .replace(/[\u0300-\u036f]/g, "") // xóa dấu
+      .replace(/đ/g, "d")
+      .replace(/Đ/g, "D")
+      .replace(/\s+/g, "-") // thay khoảng trắng
+      .toLowerCase(); // lowercase
+  }
 
   // Kiểm tra kích thước màn hình
   useEffect(() => {
@@ -77,17 +89,39 @@ const CustomHeader = () => {
   return (
     <>
       <div className="header-container">
-        <div className="logo">🐾 PetCare</div>
+        <div className="logo" onClick={() => router.push("/")}>
+          <img
+            src="https://vuoong.vn/images/logo.png"
+            alt="logo"
+            className="img-logo"
+          />
+        </div>
 
         {!isMobile && (
           <div className="menu-wrapper">
             {menuItems.map((item, index) => (
-              <div className="menu-item" key={index}>
+              <div
+                className="menu-item"
+                key={index}
+                onClick={() => {
+                  if (item.children.length === 0) {
+                    router.push(`/home/${slugify(item.label)}`);
+                  }
+                }}
+              >
                 {item.label}
+
                 {item.children.length > 0 && (
                   <div className="dropdown">
                     {item.children.map((child, idx) => (
-                      <div className="dropdown-item" key={idx}>
+                      <div
+                        className="dropdown-item"
+                        key={idx}
+                        onClick={(e) => {
+                          e.stopPropagation(); // chặn sự kiện click lên cha
+                          router.push(`/home/${slugify(child)}`);
+                        }}
+                      >
                         {child}
                       </div>
                     ))}
@@ -130,14 +164,29 @@ const CustomHeader = () => {
             <div key={index}>
               <div
                 className="mobile-menu-title"
-                onClick={() => toggleMobileMenu(item.label)}
+                onClick={() => {
+                  if (item.children.length > 0) {
+                    toggleMobileMenu(item.label);
+                  } else {
+                    router.push(`/home/${slugify(item.label)}`);
+                    setIsOpen(false);
+                  }
+                }}
               >
                 {item.label}
               </div>
+
               {item.children.length > 0 && activeMobileMenu === item.label && (
                 <div className="mobile-submenu">
                   {item.children.map((child, idx) => (
-                    <div key={idx} className="mobile-subitem">
+                    <div
+                      key={idx}
+                      className="mobile-subitem"
+                      onClick={() => {
+                        router.push(`/home/${slugify(child)}`);
+                        setIsOpen(false);
+                      }}
+                    >
                       {child}
                     </div>
                   ))}
