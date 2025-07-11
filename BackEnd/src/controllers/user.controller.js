@@ -98,9 +98,52 @@ const deleteUser = async (req, res) => {
     console.log("Lỗi: ", error);
     return res.status(500).json({
       errCode: -1,
-      message: "Lỗi Server",
+      message: "Lỗi Server, xóa người dùng thất bại",
     });
   }
 };
 
-export default { getAllUser, createUser, updateUser, deleteUser };
+const loginUser = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    console.log(email, password);
+    const data = await userService.loginUser(email, password);
+    console.log("data", data);
+    if (data) {
+      return res.status(200).json({
+        errCode: 0,
+        message: "Đăng nhập thành công",
+      });
+    } else {
+      return res.status(400).json({
+        errCode: 1,
+        message: "Tài khoản hoặc mật khẩu không chính xác",
+      });
+    }
+  } catch (error) {
+    console.log("Lỗi: ", error);
+    return res.status(500).json({
+      errCode: -1,
+      message: "Lỗi Server, đăng nhập thất bại",
+    });
+  }
+};
+
+const logoutUser = async (req, res) => {
+  try {
+    res.clearCookie("token");
+    res.status(200).json({ message: "Đăng xuất thành công", errCode: 0 });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Đăng xuất thất bại", errCode: -1 });
+  }
+};
+
+export default {
+  getAllUser,
+  createUser,
+  updateUser,
+  deleteUser,
+  loginUser,
+  logoutUser,
+};
