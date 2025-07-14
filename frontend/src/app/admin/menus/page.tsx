@@ -1,89 +1,40 @@
 "use client";
 
-import {
-  Table,
-  Button,
-  Space,
-  Typography,
-  Row,
-  Col,
-  Popconfirm,
-  message,
-} from "antd";
-import { PlusOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import { Button, Typography, Row, Col, message } from "antd";
+import { PlusOutlined } from "@ant-design/icons";
 import ModalCreateMenu from "./modalCreateMenu/page";
 import ModalUpdateMenu from "./modalUpdateMenu/page";
+import TableMenu from "./tableMenu/page";
+import menuService from "@/app/services/menu.services";
+import { ApiResponse, IMenu } from "@/app/types";
 const { Title } = Typography;
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-const data = [
-  {
-    key: "1",
-    id: "U001",
-    name: "menu1",
-    slug: "mô tả menu 1",
-  },
-  {
-    key: "2",
-    id: "U002",
-    name: "menu2",
-    slug: "mô tả menu 2",
-  },
-];
-
-export default function UserPage() {
+export default function MenuPage() {
+  const [dataMenu, setDataMenu] = useState<ApiResponse<IMenu[]> | null>(null);
   const [showModalCreateMenu, setShowModalCreateMenu] =
     useState<boolean>(false);
   const [showModalUpdateMenu, setShowModalUpdateMenu] =
     useState<boolean>(false);
+
   const handleDelete = (key: string) => {
     message.success(`Đã xóa người dùng có ID: ${key}`);
-    // TODO: gọi API xóa ở đây
   };
 
-  const columns = [
-    {
-      title: "ID",
-      dataIndex: "id",
-      key: "id",
-    },
-    {
-      title: "Tên menu",
-      dataIndex: "name",
-      key: "name",
-    },
-    {
-      title: "slug",
-      dataIndex: "slug",
-      key: "slug",
-    },
-    {
-      title: "Hành động",
-      key: "action",
-      render: (_: any, record: any) => (
-        <Space size="middle">
-          <Button
-            icon={<EditOutlined />}
-            type="primary"
-            size="small"
-            onClick={() => setShowModalUpdateMenu(true)}
-          >
-            Cập nhật
-          </Button>
-          <Popconfirm
-            title="Bạn có chắc muốn xóa menu này?"
-            onConfirm={() => handleDelete(record.id)}
-            okText="Xóa"
-            cancelText="Hủy"
-          >
-            <Button icon={<DeleteOutlined />} danger size="small">
-              Xóa
-            </Button>
-          </Popconfirm>
-        </Space>
-      ),
-    },
-  ];
+  const handleGetAllMenu = async () => {
+    try {
+      const data = await menuService.getAllMenu();
+      if (data.errCode === 0) {
+        setDataMenu(data);
+      }
+    } catch (error) {
+      console.log("Lỗi khi lấy menu:", error);
+    }
+  };
+
+  useEffect(() => {
+    handleGetAllMenu();
+  }, []);
 
   return (
     <div style={{ padding: 24 }}>
@@ -105,12 +56,6 @@ export default function UserPage() {
         </Col>
       </Row>
 
-      <Table
-        columns={columns}
-        dataSource={data}
-        pagination={{ pageSize: 5 }}
-        bordered
-      />
       <ModalCreateMenu
         show={showModalCreateMenu}
         setShow={setShowModalCreateMenu}
@@ -118,6 +63,11 @@ export default function UserPage() {
       <ModalUpdateMenu
         show={showModalUpdateMenu}
         setShow={setShowModalUpdateMenu}
+      />
+      <TableMenu
+        setShowModalUpdateMenu={setShowModalUpdateMenu}
+        handleDelete={handleDelete}
+        dataMenu={dataMenu}
       />
     </div>
   );

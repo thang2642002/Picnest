@@ -31,7 +31,7 @@ export default function RootLayout({
         <div className="sticky-header">
           <Header />
         </div>
-        <Container> {children}</Container>
+        <Container>{children}</Container>
       </body>
     </html>
   );
