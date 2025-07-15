@@ -1,40 +1,18 @@
 "use client";
 
-import {
-  Table,
-  Button,
-  Space,
-  Typography,
-  Row,
-  Col,
-  Popconfirm,
-  message,
-} from "antd";
+import { Button, Typography, Row, Col, message } from "antd";
 import { PlusOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ModalCreateUser from "./modalCreateUser/page";
 import ModalUpdateUser from "./modalUpadateUser/page";
+import TableUser from "./tableUser/page";
+import { IUser, ApiResponse } from "@/types/index";
+import UserServices from "@/app/services/user.services";
 
 const { Title } = Typography;
 
-const data = [
-  {
-    key: "1",
-    id: "U001",
-    username: "admin123",
-    password: "******",
-    role: "Admin",
-  },
-  {
-    key: "2",
-    id: "U002",
-    username: "user456",
-    password: "******",
-    role: "User",
-  },
-];
-
 export default function UserPage() {
+  const [dataUser, setDataUser] = useState<ApiResponse<IUser[]> | null>(null);
   const [showModalCreateUser, setShowModalCreateUser] =
     useState<boolean>(false);
   const [showModalUpdateUser, setShowModalUpdateUser] =
@@ -44,54 +22,23 @@ export default function UserPage() {
     // TODO: gọi API xóa ở đây
   };
 
-  const columns = [
-    {
-      title: "ID",
-      dataIndex: "id",
-      key: "id",
-    },
-    {
-      title: "Tên đăng nhập",
-      dataIndex: "username",
-      key: "username",
-    },
-    {
-      title: "Mật khẩu",
-      dataIndex: "password",
-      key: "password",
-    },
-    {
-      title: "Quyền",
-      dataIndex: "role",
-      key: "role",
-    },
-    {
-      title: "Hành động",
-      key: "action",
-      render: (_: any, record: any) => (
-        <Space size="middle">
-          <Button
-            icon={<EditOutlined />}
-            type="primary"
-            size="small"
-            onClick={() => setShowModalUpdateUser(true)}
-          >
-            Cập nhật
-          </Button>
-          <Popconfirm
-            title="Bạn có chắc muốn xóa người dùng này?"
-            onConfirm={() => handleDelete(record.id)}
-            okText="Xóa"
-            cancelText="Hủy"
-          >
-            <Button icon={<DeleteOutlined />} danger size="small">
-              Xóa
-            </Button>
-          </Popconfirm>
-        </Space>
-      ),
-    },
-  ];
+  const getAllUser = async () => {
+    try {
+      const data = await UserServices.getAllUser();
+      if (data && data.errCode === 0) {
+        setDataUser(data);
+      }
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  };
+
+  useEffect(() => {
+    getAllUser();
+  }, []);
+
+  console.log("chek data user", dataUser);
 
   return (
     <div style={{ padding: 24 }}>
@@ -113,12 +60,6 @@ export default function UserPage() {
         </Col>
       </Row>
 
-      <Table
-        columns={columns}
-        dataSource={data}
-        pagination={{ pageSize: 5 }}
-        bordered
-      />
       <ModalCreateUser
         show={showModalCreateUser}
         setShow={setShowModalCreateUser}
@@ -126,6 +67,11 @@ export default function UserPage() {
       <ModalUpdateUser
         show={showModalUpdateUser}
         setShow={setShowModalUpdateUser}
+      />
+      <TableUser
+        dataUser={dataUser}
+        setShowModalUpdateUser={setShowModalUpdateUser}
+        handleDelete={handleDelete}
       />
     </div>
   );

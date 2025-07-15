@@ -1,39 +1,19 @@
 "use client";
-
-import {
-  Table,
-  Button,
-  Space,
-  Typography,
-  Row,
-  Col,
-  Popconfirm,
-  message,
-} from "antd";
-import { PlusOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import { useEffect, useState } from "react";
+import { Button, Typography, Row, Col, message } from "antd";
+import { PlusOutlined } from "@ant-design/icons";
 import ModalCreateCategory from "./modalCreateCategory/page";
 import ModalUpdateCategory from "./modalUpdateCategory/page";
-import { useState } from "react";
+import TableCategory from "./tableCategory/page";
+import categoryServices from "@/app/services/category.services";
+import { ICategory, ApiResponse } from "@/types/index";
+
 const { Title } = Typography;
 
-const data = [
-  {
-    key: "1",
-    id: "U001",
-    name: "thể loại 1",
-    slug: "mô tả thể loại 1",
-    menu_id: "menu 1",
-  },
-  {
-    key: "2",
-    id: "U002",
-    name: "thể loại 2",
-    slug: "mô tả thể loại 2",
-    menu_id: " menu 2",
-  },
-];
-
 export default function Category() {
+  const [dataCategory, setDataCategory] = useState<ApiResponse<
+    ICategory[]
+  > | null>(null);
   const [showModalCreateCategory, setShowModalCreateCategory] =
     useState<boolean>(false);
   const [showModalUpdateCategory, setShowModalUpdateCategory] =
@@ -43,54 +23,23 @@ export default function Category() {
     // TODO: gọi API xóa ở đây
   };
 
-  const columns = [
-    {
-      title: "ID",
-      dataIndex: "id",
-      key: "id",
-    },
-    {
-      title: "Tên menu",
-      dataIndex: "name",
-      key: "name",
-    },
-    {
-      title: "slug",
-      dataIndex: "slug",
-      key: "slug",
-    },
-    {
-      title: "menu",
-      dataIndex: "menu_id",
-      key: "menu_id",
-    },
-    {
-      title: "Hành động",
-      key: "action",
-      render: (_: any, record: any) => (
-        <Space size="middle">
-          <Button
-            icon={<EditOutlined />}
-            type="primary"
-            size="small"
-            onClick={() => setShowModalUpdateCategory(true)}
-          >
-            Cập nhật
-          </Button>
-          <Popconfirm
-            title="Bạn có chắc muốn xóa thể loại này?"
-            onConfirm={() => handleDelete(record.id)}
-            okText="Xóa"
-            cancelText="Hủy"
-          >
-            <Button icon={<DeleteOutlined />} danger size="small">
-              Xóa
-            </Button>
-          </Popconfirm>
-        </Space>
-      ),
-    },
-  ];
+  const getAllCategory = async () => {
+    try {
+      const data = await categoryServices.getAllCategory();
+      if (data && data.errCode === 0) {
+        setDataCategory(data);
+      }
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  };
+
+  useEffect(() => {
+    getAllCategory();
+  }, []);
+
+  console.log("chek cateegory", dataCategory);
 
   return (
     <div style={{ padding: 24 }}>
@@ -112,12 +61,6 @@ export default function Category() {
         </Col>
       </Row>
 
-      <Table
-        columns={columns}
-        dataSource={data}
-        pagination={{ pageSize: 5 }}
-        bordered
-      />
       <ModalCreateCategory
         show={showModalCreateCategory}
         setShow={setShowModalCreateCategory}
@@ -125,6 +68,11 @@ export default function Category() {
       <ModalUpdateCategory
         show={showModalUpdateCategory}
         setShow={setShowModalUpdateCategory}
+      />
+      <TableCategory
+        dataCategory={dataCategory}
+        setShowModalUpdateCategory={setShowModalUpdateCategory}
+        handleDelete={handleDelete}
       />
     </div>
   );

@@ -24,7 +24,7 @@ export default function MenuPage() {
   const handleGetAllMenu = async () => {
     try {
       const data = await menuService.getAllMenu();
-      if (data.errCode === 0) {
+      if (data && data.errCode === 0) {
         setDataMenu(data);
       }
     } catch (error) {
