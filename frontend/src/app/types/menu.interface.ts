@@ -3,3 +3,8 @@ export interface IMenu {
   name: string;
   slug: string;
 }
+
+export interface MenuPayload {
+  name: string;
+  slug: string;
+}

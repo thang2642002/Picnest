@@ -1,19 +1,13 @@
 "use client";
 
-import {
-  Table,
-  Button,
-  Space,
-  Typography,
-  Row,
-  Col,
-  Popconfirm,
-  message,
-} from "antd";
-import { PlusOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import { Button, Typography, Row, Col, message } from "antd";
+import { PlusOutlined } from "@ant-design/icons";
 import ModalCreateImage from "./ModalCreateImage/page";
 import ModalUpdateImage from "./ModalUpdateImage/page";
-import { useState } from "react";
+import TableImage from "./TableImage/TableImage";
+import { useEffect, useState } from "react";
+import { IImage, ApiResponse } from "@/types/index";
+import imageServices from "@/app/services/image.services";
 const { Title } = Typography;
 
 const data = [
@@ -34,6 +28,9 @@ const data = [
 ];
 
 export default function Image() {
+  const [dataImage, setDataImage] = useState<ApiResponse<IImage[]> | null>(
+    null
+  );
   const [showModalCreateImage, setShowModalCreateImage] =
     useState<boolean>(false);
   const [showModalUpdateImage, setShowModalUpdateImage] =
@@ -61,54 +58,21 @@ export default function Image() {
     // TODO: gọi API xóa ở đây
   };
 
-  const columns = [
-    {
-      title: "ID",
-      dataIndex: "id",
-      key: "id",
-    },
-    {
-      title: "link ảnh",
-      dataIndex: "url",
-      key: "name",
-    },
-    {
-      title: "tên ảnh",
-      dataIndex: "title",
-      key: "slug",
-    },
-    {
-      title: "Thể loại",
-      dataIndex: "category_id",
-      key: "category_id",
-    },
-    {
-      title: "Hành động",
-      key: "action",
-      render: (_: any, record: any) => (
-        <Space size="middle">
-          <Button
-            icon={<EditOutlined />}
-            type="primary"
-            size="small"
-            onClick={() => setShowModalUpdateImage(true)}
-          >
-            Cập nhật
-          </Button>
-          <Popconfirm
-            title="Bạn có chắc muốn xóa ảnh này?"
-            onConfirm={() => handleDelete(record.id)}
-            okText="Xóa"
-            cancelText="Hủy"
-          >
-            <Button icon={<DeleteOutlined />} danger size="small">
-              Xóa
-            </Button>
-          </Popconfirm>
-        </Space>
-      ),
-    },
-  ];
+  const handleGetAllImage = async () => {
+    try {
+      const data = await imageServices.getAllImage();
+      if (data && data.errCode === 0) {
+        setDataImage(data);
+      }
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  };
+
+  useEffect(() => {
+    handleGetAllImage();
+  }, []);
 
   return (
     <div style={{ padding: 24 }}>
@@ -130,12 +94,6 @@ export default function Image() {
         </Col>
       </Row>
 
-      <Table
-        columns={columns}
-        dataSource={data}
-        pagination={{ pageSize: 5 }}
-        bordered
-      />
       <ModalCreateImage
         show={showModalCreateImage}
         setShow={setShowModalCreateImage}
@@ -146,6 +104,12 @@ export default function Image() {
         show={showModalUpdateImage}
         setShow={setShowModalUpdateImage}
         onCreateImages={onCreateImages}
+      />
+
+      <TableImage
+        dataImage={dataImage}
+        setShowModalUpdateImage={setShowModalUpdateImage}
+        handleDelete={handleDelete}
       />
     </div>
   );

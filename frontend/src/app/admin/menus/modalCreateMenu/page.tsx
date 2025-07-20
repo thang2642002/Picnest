@@ -1,27 +1,42 @@
 "use client";
 
 import React, { useState } from "react";
-import { Modal, Form, Input, Button, message } from "antd";
+import { Modal, Form, Input } from "antd";
+import { toast } from "react-toastify";
+import MenuService from "@/app/services/menu.services";
 
 interface MenuModalProps {
   show: boolean;
   setShow: React.Dispatch<React.SetStateAction<boolean>>;
+  handleGetAllMenu: () => void;
 }
 
-const ModalCreateMenu: React.FC<MenuModalProps> = ({ show, setShow }) => {
+const ModalCreateMenu: React.FC<MenuModalProps> = ({
+  show,
+  setShow,
+  handleGetAllMenu,
+}) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [name, setName] = useState<string>("");
   const [slug, setSlug] = useState<string>("");
 
   const handleCancel = () => {
     setShow(false);
+    setName("");
+    setSlug("");
   };
 
   const handleOk = async () => {
     try {
-      console.log("name", name);
-      console.log("slug", slug);
-      setShow(false);
+      if (!name && !slug) {
+        toast.error("Bạn nhập chưa đủ thông tin");
+      }
+      const data = await MenuService.createMenu({ name, slug });
+      if (data.errCode === 0 && data) {
+        toast.success("Tạo mới menu thành công");
+      }
+      handleCancel();
+      handleGetAllMenu();
     } catch (err) {
       console.error("Lỗi:", err);
     }

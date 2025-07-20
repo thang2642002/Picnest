@@ -84,6 +84,7 @@ const deleteMenu = async (req, res) => {
         message: "Xóa menu thành công",
       });
     } else {
+      console.log("data", data);
       return res.status(400).json({
         errCode: 1,
         message: "Xóa menu thất bại",

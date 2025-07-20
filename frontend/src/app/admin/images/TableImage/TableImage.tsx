@@ -1,38 +1,39 @@
 import React from "react";
 import { Table, Button, Space, Popconfirm } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
-import { ApiResponse, IMenu } from "@/app/types";
+import { IImage, ApiResponse } from "@/types/index";
 
-interface TableMenuProps {
-  dataMenu: ApiResponse<IMenu[]> | null;
-  setShowModalUpdateMenu: (value: boolean) => void;
+interface TableImageProps {
+  dataImage: ApiResponse<IImage[]> | null;
+  setShowModalUpdateImage: (value: boolean) => void;
   handleDelete: (id: string) => void;
-  setMenuSelected: (menu: IMenu) => void;
 }
 
-const TableMenu: React.FC<TableMenuProps> = ({
-  dataMenu,
-  setShowModalUpdateMenu,
-  setMenuSelected,
+const TableImage: React.FC<TableImageProps> = ({
+  dataImage,
+  setShowModalUpdateImage,
   handleDelete,
 }) => {
   const columns = [
     {
       title: "ID",
-      dataIndex: "menu_id",
+      dataIndex: "id",
       key: "id",
-      width: 180,
-      render: (text: string) => `${text.slice(0, 8)}...`,
     },
     {
-      title: "Tên menu",
-      dataIndex: "name",
+      title: "link ảnh",
+      dataIndex: "url",
       key: "name",
     },
     {
-      title: "slug",
-      dataIndex: "slug",
+      title: "tên ảnh",
+      dataIndex: "title",
       key: "slug",
+    },
+    {
+      title: "Thể loại",
+      dataIndex: "category_id",
+      key: "category_id",
     },
     {
       title: "Hành động",
@@ -43,16 +44,13 @@ const TableMenu: React.FC<TableMenuProps> = ({
             icon={<EditOutlined />}
             type="primary"
             size="small"
-            onClick={() => {
-              setMenuSelected(record);
-              setShowModalUpdateMenu(true);
-            }}
+            onClick={() => setShowModalUpdateImage(true)}
           >
             Cập nhật
           </Button>
           <Popconfirm
-            title="Bạn có chắc muốn xóa menu này?"
-            onConfirm={() => handleDelete(record.menu_id)}
+            title="Bạn có chắc muốn xóa ảnh này?"
+            onConfirm={() => handleDelete(record.id)}
             okText="Xóa"
             cancelText="Hủy"
           >
@@ -66,15 +64,15 @@ const TableMenu: React.FC<TableMenuProps> = ({
   ];
   return (
     <div>
+      {" "}
       <Table
         columns={columns}
-        dataSource={dataMenu?.data || []}
+        dataSource={dataImage?.data || []}
         pagination={{ pageSize: 5 }}
         bordered
-        rowKey="menu_id"
       />
     </div>
   );
 };
 
-export default TableMenu;
+export default TableImage;
