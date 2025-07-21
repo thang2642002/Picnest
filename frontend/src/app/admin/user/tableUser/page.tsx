@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Table, Button, Space, Popconfirm } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { IUser, ApiResponse } from "@/types/index";
@@ -7,12 +7,14 @@ interface TableUserProps {
   dataUser: ApiResponse<IUser[]> | null;
   setShowModalUpdateUser: (value: boolean) => void;
   handleDelete: (id: string) => void;
+  setUserSelected: (user: IUser) => void;
 }
 
 const TableUser: React.FC<TableUserProps> = ({
   setShowModalUpdateUser,
   handleDelete,
   dataUser,
+  setUserSelected,
 }) => {
   const columns = [
     {
@@ -44,13 +46,16 @@ const TableUser: React.FC<TableUserProps> = ({
             icon={<EditOutlined />}
             type="primary"
             size="small"
-            onClick={() => setShowModalUpdateUser(true)}
+            onClick={() => {
+              setShowModalUpdateUser(true);
+              setUserSelected(record);
+            }}
           >
             Cập nhật
           </Button>
           <Popconfirm
             title="Bạn có chắc muốn xóa người dùng này?"
-            onConfirm={() => handleDelete(record.id)}
+            onConfirm={() => handleDelete(record.user_id)}
             okText="Xóa"
             cancelText="Hủy"
           >

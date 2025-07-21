@@ -1,7 +1,9 @@
 "use client";
 
 import React, { useState } from "react";
-import { Modal, Form, Input, Button, message, Select } from "antd";
+import { Modal, Form, Input, Select } from "antd";
+import { toast } from "react-toastify";
+import userServices from "@/app/services/user.services";
 
 interface MenuModalProps {
   show: boolean;
@@ -17,17 +19,32 @@ const ModalCreateUser: React.FC<MenuModalProps> = ({ show, setShow }) => {
   const [role, setRole] = useState<string>("Admin");
 
   const handleCancel = () => {
+    setEmail("");
+    setName("");
+    setPassword("");
+    setRole("");
     setShow(false);
   };
 
   const handleOk = async () => {
     try {
-      console.log("name", name);
-      console.log("slug", email);
-      console.log("slug", password);
-      console.log("slug", role);
-      setShow(false);
+      if (!name && !email && !password && !role) {
+        toast.error("Vui lòng nhập đầy đủ thông tin");
+      }
+      const data = await userServices.createUser({
+        name,
+        email,
+        password,
+        role,
+      });
+      if (data && data.errCode === 0) {
+        toast.success("Tạo mới người dùng thành công");
+        handleCancel();
+      } else {
+        toast.error("Tạo mới người dùng thất bại");
+      }
     } catch (err) {
+      toast.error("Lỗi sevver rồi, tạo người dùng thất bại");
       console.error("Lỗi:", err);
     }
   };

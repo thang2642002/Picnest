@@ -8,6 +8,7 @@ import ModalUpdateUser from "./modalUpadateUser/page";
 import TableUser from "./tableUser/page";
 import { IUser, ApiResponse } from "@/types/index";
 import UserServices from "@/app/services/user.services";
+import { toast } from "react-toastify";
 
 const { Title } = Typography;
 
@@ -17,9 +18,21 @@ export default function UserPage() {
     useState<boolean>(false);
   const [showModalUpdateUser, setShowModalUpdateUser] =
     useState<boolean>(false);
-  const handleDelete = (key: string) => {
-    message.success(`Đã xóa người dùng có ID: ${key}`);
-    // TODO: gọi API xóa ở đây
+
+  const [userSelected, setUserSelected] = useState<IUser | null>(null);
+  const handleDelete = async (user_id: string) => {
+    try {
+      const res = await UserServices.deleteUser(user_id);
+      if (res && res.errCode === 0) {
+        toast.success("Xóa menu thành công!");
+        getAllUser();
+      } else {
+        toast.error(res.message || "Xóa menu thất bại!");
+      }
+    } catch (err) {
+      console.error("Lỗi khi xóa menu:", err);
+      toast.error("Đã xảy ra lỗi khi xóa!");
+    }
   };
 
   const getAllUser = async () => {
@@ -67,11 +80,14 @@ export default function UserPage() {
       <ModalUpdateUser
         show={showModalUpdateUser}
         setShow={setShowModalUpdateUser}
+        userSelected={userSelected}
+        dataUser={dataUser}
       />
       <TableUser
         dataUser={dataUser}
         setShowModalUpdateUser={setShowModalUpdateUser}
         handleDelete={handleDelete}
+        setUserSelected={setUserSelected}
       />
     </div>
   );

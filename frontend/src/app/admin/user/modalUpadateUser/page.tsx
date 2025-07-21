@@ -1,14 +1,24 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Modal, Form, Input, Button, message, Select } from "antd";
+import { ApiResponse, IUser } from "@/app/types";
+import userServices from "@/app/services/user.services";
+import { toast } from "react-toastify";
 
 interface MenuModalProps {
   show: boolean;
   setShow: React.Dispatch<React.SetStateAction<boolean>>;
+  userSelected: IUser | null;
+  dataUser: ApiResponse<IUser[]> | null;
 }
 
-const ModalUpdateUser: React.FC<MenuModalProps> = ({ show, setShow }) => {
+const ModalUpdateUser: React.FC<MenuModalProps> = ({
+  show,
+  setShow,
+  userSelected,
+  dataUser,
+}) => {
   const { Option } = Select;
   const [loading, setLoading] = useState<boolean>(false);
   const [name, setName] = useState<string>("");
@@ -16,18 +26,42 @@ const ModalUpdateUser: React.FC<MenuModalProps> = ({ show, setShow }) => {
   const [password, setPassword] = useState<string>("");
   const [role, setRole] = useState<string>("Admin");
 
+  useEffect(() => {
+    if (userSelected) {
+      setEmail(userSelected.email);
+      setName(userSelected.name);
+      setPassword(userSelected.password);
+      setRole(userSelected.role);
+    }
+  }, []);
+
   const handleCancel = () => {
     setShow(false);
+    setName("");
+    setEmail("");
+    setPassword("");
+    setRole("");
   };
 
-  const handleOk = async () => {
+  const handleUpdate = async () => {
     try {
-      console.log("name", name);
-      console.log("email", email);
-      console.log("password", password);
-      console.log("role", role);
+      const data = await userServices.updateUser(
+        userSelected?.user_id as string,
+        {
+          name,
+          email,
+          password,
+          role,
+        }
+      );
+      if (data && data.errCode === 0) {
+        toast.success("Cập nhật người dùng thành công");
+      } else {
+        toast.error("Cập nhật người dùng thất bại");
+      }
       setShow(false);
     } catch (err) {
+      toast.error("Cập nhật người dùng thất bại");
       console.error("Lỗi:", err);
     }
   };
@@ -35,7 +69,7 @@ const ModalUpdateUser: React.FC<MenuModalProps> = ({ show, setShow }) => {
     <Modal
       title="Chỉnh sửa quản trị viên"
       open={show}
-      onOk={handleOk}
+      onOk={handleUpdate}
       onCancel={handleCancel}
       confirmLoading={loading}
       okText="Chỉnh sửa"

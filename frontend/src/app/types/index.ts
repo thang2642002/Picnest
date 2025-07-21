@@ -1,4 +1,4 @@
-export type { IUser } from "./user.interface";
+export type { IUser, UserPayload } from "./user.interface";
 export type { IMenu, MenuPayload } from "./menu.interface";
 export type { ICategory } from "./category.interface";
 export type { IImage } from "./image.interface";

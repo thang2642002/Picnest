@@ -5,3 +5,10 @@ export interface IUser {
   password: string;
   role: string;
 }
+
+export interface UserPayload {
+  name: string;
+  email: string;
+  password: string;
+  role: string;
+}
