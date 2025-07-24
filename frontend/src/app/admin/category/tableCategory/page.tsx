@@ -7,17 +7,19 @@ interface TableCategoryProps {
   dataCategory: ApiResponse<ICategory[]> | null;
   setShowModalUpdateCategory: (value: boolean) => void;
   handleDelete: (id: string) => void;
+  setSelectedCategory: (category: ICategory) => void;
 }
 
 const TableCategory: React.FC<TableCategoryProps> = ({
   dataCategory,
   setShowModalUpdateCategory,
   handleDelete,
+  setSelectedCategory,
 }) => {
   const columns = [
     {
       title: "ID",
-      dataIndex: "id",
+      dataIndex: "categories_id",
       key: "id",
     },
     {
@@ -31,9 +33,9 @@ const TableCategory: React.FC<TableCategoryProps> = ({
       key: "slug",
     },
     {
-      title: "menu",
-      dataIndex: "menu_id",
+      title: "Menu",
       key: "menu_id",
+      render: (_: any, record: any) => record.menu?.name || "Không có",
     },
     {
       title: "Hành động",
@@ -44,13 +46,16 @@ const TableCategory: React.FC<TableCategoryProps> = ({
             icon={<EditOutlined />}
             type="primary"
             size="small"
-            onClick={() => setShowModalUpdateCategory(true)}
+            onClick={() => {
+              setShowModalUpdateCategory(true);
+              setSelectedCategory(record);
+            }}
           >
             Cập nhật
           </Button>
           <Popconfirm
             title="Bạn có chắc muốn xóa thể loại này?"
-            onConfirm={() => handleDelete(record.id)}
+            onConfirm={() => handleDelete(record.categories_id)}
             okText="Xóa"
             cancelText="Hủy"
           >

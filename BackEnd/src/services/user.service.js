@@ -79,12 +79,10 @@ const deleteUser = async (user_id) => {
 const loginUser = async (email, password) => {
   try {
     const user = await db.User.findOne({ where: { email } });
-    console.log("check email:", user);
     if (!user) {
       return null;
     }
     const isMatch = await bcrypt.compare(password, user.password);
-    console.log("check pass", isMatch);
     if (!isMatch) {
       return null;
     }
@@ -98,7 +96,6 @@ const loginUser = async (email, password) => {
       { expiresIn: "7d" }
     );
     return {
-      message: "Đăng nhập thành công",
       token,
       user: {
         user_id: user.user_id,

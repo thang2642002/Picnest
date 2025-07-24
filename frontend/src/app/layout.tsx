@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import "antd/dist/reset.css";
+import { Bounce, ToastContainer } from "react-toastify";
 import Container from "@/app/components/container";
 import Header from "./Clients/Header/Header";
 
@@ -32,6 +33,19 @@ export default function RootLayout({
           <Header />
         </div>
         <Container>{children}</Container>
+        <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick={false}
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+          transition={Bounce}
+        />
       </body>
     </html>
   );

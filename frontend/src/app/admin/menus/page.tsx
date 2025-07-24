@@ -22,7 +22,7 @@ export default function MenuPage() {
   const handleDelete = async (menu_id: string) => {
     try {
       const res = await menuService.deleteMenu(menu_id);
-      console.log("res", res);
+
       if (res.errCode === 0) {
         toast.success("Xóa menu thành công!");
         handleGetAllMenu();
@@ -39,7 +39,6 @@ export default function MenuPage() {
     try {
       const data = await menuService.getAllMenu();
       if (data && data.errCode === 0) {
-        console.log(data);
         setDataMenu(data);
       }
     } catch (error) {
@@ -79,7 +78,6 @@ export default function MenuPage() {
       <ModalUpdateMenu
         show={showModalUpdateMenu}
         setShow={setShowModalUpdateMenu}
-        dataMenu={dataMenu}
         menuSelected={menuSelected}
         handleGetAllMenu={handleGetAllMenu}
       />

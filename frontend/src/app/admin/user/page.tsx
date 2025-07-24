@@ -51,8 +51,6 @@ export default function UserPage() {
     getAllUser();
   }, []);
 
-  console.log("chek data user", dataUser);
-
   return (
     <div style={{ padding: 24 }}>
       <Row justify="space-between" align="middle" style={{ marginBottom: 16 }}>

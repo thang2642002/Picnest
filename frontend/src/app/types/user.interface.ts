@@ -12,3 +12,8 @@ export interface UserPayload {
   password: string;
   role: string;
 }
+
+export interface UserLogin<T = undefined> {
+  token: string;
+  data?: T;
+}

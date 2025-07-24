@@ -1,32 +1,69 @@
 "use client";
 
-import React, { useState } from "react";
-import { Modal, Form, Input, Button, message, Select } from "antd";
+import React, { useEffect, useState } from "react";
+import { Modal, Form, Input, Select } from "antd";
+import { toast } from "react-toastify";
+import { ICategory, IMenu } from "@/app/types";
+import categoryServices from "@/app/services/category.services";
 
 interface MenuModalProps {
   show: boolean;
   setShow: React.Dispatch<React.SetStateAction<boolean>>;
+  selectedCategory: ICategory | null;
+  setSelectedCategory: (category: ICategory | null) => void;
+  menu: IMenu[] | [];
+  getAllCategory: () => void;
 }
 
-const ModalUpdateCategory: React.FC<MenuModalProps> = ({ show, setShow }) => {
+const ModalUpdateCategory: React.FC<MenuModalProps> = ({
+  show,
+  setShow,
+  selectedCategory,
+  setSelectedCategory,
+  menu,
+  getAllCategory,
+}) => {
   const { Option } = Select;
   const [loading, setLoading] = useState<boolean>(false);
   const [name, setName] = useState<string>("");
   const [slug, setSlug] = useState<string>("");
-  const [menuId, setMenuId] = useState<string>("Menu1");
+  const [menuId, setMenuId] = useState<string>("");
 
   const handleCancel = () => {
     setShow(false);
+    setName("");
+    setSlug("");
+    setMenuId("");
+    setSelectedCategory(null);
   };
 
-  const handleOk = async () => {
-    try {
-      console.log("name", name);
-      console.log("slug", slug);
-      console.log("menuId", menuId);
+  useEffect(() => {
+    if (selectedCategory) {
+      setName(selectedCategory.name);
+      setSlug(selectedCategory.slug);
+      setMenuId(selectedCategory.menu_id);
+    }
+  }, [selectedCategory]);
 
-      setShow(false);
+  const handleUpdateCategory = async () => {
+    try {
+      if (selectedCategory?.categories_id) {
+        const response = await categoryServices.updateCategory(
+          selectedCategory?.categories_id,
+          { name, slug, menu_id: menuId }
+        );
+        if (response && response.errCode === 0) {
+          toast.success("Cập nhật thể loại thành công");
+        } else {
+          toast.error("Cập nhật thể loại thất bại");
+        }
+      } else {
+        toast.error("Cập nhật thể loại thất bại");
+      }
+      getAllCategory();
+      handleCancel();
     } catch (err) {
+      toast.error("Lỗi server rồi");
       console.error("Lỗi:", err);
     }
   };
@@ -34,7 +71,7 @@ const ModalUpdateCategory: React.FC<MenuModalProps> = ({ show, setShow }) => {
     <Modal
       title="Chỉnh sửa thể loại"
       open={show}
-      onOk={handleOk}
+      onOk={handleUpdateCategory}
       onCancel={handleCancel}
       confirmLoading={loading}
       okText="chỉnh sửa"
@@ -60,10 +97,13 @@ const ModalUpdateCategory: React.FC<MenuModalProps> = ({ show, setShow }) => {
             value={menuId}
             onChange={(value) => setMenuId(value)}
             placeholder="Chọn menu..."
+            disabled={!menu}
           >
-            <Option value="menu1">Menu1</Option>
-            <Option value="menu2">Menu2</Option>
-            <Option value="menu3">Menu3</Option>
+            {menu.map((menu) => (
+              <Option key={menu.menu_id} value={menu.menu_id}>
+                {menu.name}
+              </Option>
+            ))}
           </Select>
         </Form.Item>
       </Form>

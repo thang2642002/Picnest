@@ -1,6 +1,7 @@
 import Image from "next/image";
 import styles from "./page.module.css";
 import CardHome from "./components/CardHome/CardHome";
+
 import { Col, Row } from "antd";
 import "./globals.css";
 

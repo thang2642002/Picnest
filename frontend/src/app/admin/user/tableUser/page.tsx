@@ -28,9 +28,9 @@ const TableUser: React.FC<TableUserProps> = ({
       key: "name",
     },
     {
-      title: "Mật khẩu",
-      dataIndex: "password",
-      key: "password",
+      title: "Email",
+      dataIndex: "email",
+      key: "email",
     },
     {
       title: "Quyền",

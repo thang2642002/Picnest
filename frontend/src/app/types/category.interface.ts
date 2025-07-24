@@ -4,3 +4,9 @@ export interface ICategory {
   slug: string;
   menu_id: string;
 }
+
+export interface CategoryPayload {
+  name: string;
+  slug: string;
+  menu_id: string;
+}

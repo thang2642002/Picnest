@@ -9,7 +9,6 @@ import { toast } from "react-toastify";
 interface MenuModalProps {
   show: boolean;
   setShow: React.Dispatch<React.SetStateAction<boolean>>;
-  dataMenu: ApiResponse<IMenu[]> | null;
   menuSelected: IMenu | null;
   handleGetAllMenu: () => void;
 }

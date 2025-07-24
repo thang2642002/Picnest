@@ -1,32 +1,57 @@
 "use client";
 
 import React, { useState } from "react";
-import { Modal, Form, Input, Button, message, Select } from "antd";
+import { Modal, Form, Input, Select } from "antd";
+import CategoryServices from "@/app/services/category.services";
+import { toast } from "react-toastify";
+import { IMenu } from "@/types/index";
 
 interface MenuModalProps {
   show: boolean;
   setShow: React.Dispatch<React.SetStateAction<boolean>>;
+  menu: IMenu[];
+  getAllCategory: () => void;
 }
 
-const ModalCreateCategory: React.FC<MenuModalProps> = ({ show, setShow }) => {
+const ModalCreateCategory: React.FC<MenuModalProps> = ({
+  show,
+  setShow,
+  menu,
+  getAllCategory,
+}) => {
   const { Option } = Select;
   const [loading, setLoading] = useState<boolean>(false);
   const [name, setName] = useState<string>("");
   const [slug, setSlug] = useState<string>("");
-  const [menuId, setMenuId] = useState<string>("Menu1");
+  const [menuId, setMenuId] = useState<string>("");
 
   const handleCancel = () => {
     setShow(false);
+    setMenuId("");
+    setName("");
+    setSlug("");
   };
 
   const handleOk = async () => {
     try {
-      console.log("name", name);
-      console.log("slug", slug);
-      console.log("slug", menuId);
-
-      setShow(false);
+      if (!name && !slug && menuId) {
+        toast.error("Vui lòng nhập đầy đủ thông tin");
+      } else {
+        const data = await CategoryServices.createCategory({
+          name,
+          slug,
+          menu_id: menuId,
+        });
+        if (data && data.errCode === 0) {
+          toast.success("Tạo mới thể loại thành công");
+        } else {
+          toast.error("Tạo mới thể loại thất bại");
+        }
+      }
+      getAllCategory();
+      handleCancel();
     } catch (err) {
+      toast.error("Lỗi Server rồi");
       console.error("Lỗi:", err);
     }
   };
@@ -60,10 +85,13 @@ const ModalCreateCategory: React.FC<MenuModalProps> = ({ show, setShow }) => {
             value={menuId}
             onChange={(value) => setMenuId(value)}
             placeholder="Chọn menu..."
+            disabled={!menu}
           >
-            <Option value="menu1">Menu1</Option>
-            <Option value="menu2">Menu2</Option>
-            <Option value="menu3">Menu3</Option>
+            {menu?.map((menu) => (
+              <Option key={menu.menu_id} value={menu.menu_id}>
+                {menu.name}
+              </Option>
+            ))}
           </Select>
         </Form.Item>
       </Form>

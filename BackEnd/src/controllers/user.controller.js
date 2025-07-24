@@ -106,13 +106,12 @@ const deleteUser = async (req, res) => {
 const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
-    console.log(email, password);
     const data = await userService.loginUser(email, password);
-    console.log("data", data);
     if (data) {
       return res.status(200).json({
         errCode: 0,
         message: "Đăng nhập thành công",
+        data: data,
       });
     } else {
       return res.status(400).json({

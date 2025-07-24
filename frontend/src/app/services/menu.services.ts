@@ -6,7 +6,6 @@ const getAllMenu = async (): Promise<ApiResponse<IMenu[]>> => {
     const response = await axios.get<ApiResponse<IMenu[]>>(
       "/menus/get-all-menu"
     );
-    console.log(response.data);
     return response.data;
   } catch (error) {
     console.error("Lỗi khi gọi API menu:", error);
@@ -40,7 +39,6 @@ const updateMenu = async (
 const deleteMenu = async (menu_id: string): Promise<ApiResponse> => {
   try {
     const response = await axios.delete(`/menus/delete-menu/${menu_id}`);
-    console.log("response.data", response.data);
     return response.data;
   } catch (error) {
     console.error("Lỗi tạo menu:", error);
