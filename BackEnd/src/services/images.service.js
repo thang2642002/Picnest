@@ -14,26 +14,54 @@ const getAllImage = async () => {
   }
 };
 
-const createImage = async (file, title, categories_id) => {
+const createImage = async (categories_id, files, titles) => {
+  if (!categories_id || !files || files.length === 0) {
+    return {
+      message: "Thiếu categories_id hoặc file ảnh",
+      errCode: 1,
+      statusCode: 400,
+    };
+  }
+
+  const titlesArray = Array.isArray(titles) ? titles : [titles];
+
+  if (titlesArray.length !== files.length) {
+    return {
+      message: "Số lượng tiêu đề không khớp với số lượng ảnh",
+      errCode: 2,
+      statusCode: 400,
+    };
+  }
+
   try {
-    if (!file?.path || !file?.filename) {
-      return null;
-    }
-
-    const image = await db.Image.create({
+    const images = files.map((file, index) => ({
       url: file.path,
-      title,
+      title: titlesArray[index],
       categories_id,
-    });
+    }));
 
-    return image;
+    const created = await db.Image.bulkCreate(images);
+
+    return {
+      message: "Tạo ảnh thành công",
+      errCode: 0,
+      statusCode: 201,
+      data: created,
+    };
   } catch (error) {
-    console.log("Lỗi Service:", error);
-    throw error;
+    console.error("Lỗi khi tạo ảnh:", error);
+    return {
+      message: "Lỗi server khi tạo ảnh",
+      errCode: -1,
+      statusCode: 500,
+    };
   }
 };
 
 const updateImage = async (image_id, file, title, categories_id) => {
+  if (!image_id && !file && !title && !categories_id) {
+    return null;
+  }
   try {
     const image = await db.Image.findByPk(image_id);
     if (!image) return null;
