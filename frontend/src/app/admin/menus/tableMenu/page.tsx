@@ -72,6 +72,7 @@ const TableMenu: React.FC<TableMenuProps> = ({
         pagination={{ pageSize: 5 }}
         bordered
         rowKey="menu_id"
+        scroll={{ x: "max-content" }}
       />
     </div>
   );

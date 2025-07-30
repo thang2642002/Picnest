@@ -76,6 +76,7 @@ const TableUser: React.FC<TableUserProps> = ({
         dataSource={dataUser?.data || []}
         pagination={{ pageSize: 5 }}
         bordered
+        scroll={{ x: "max-content" }}
       />
     </div>
   );

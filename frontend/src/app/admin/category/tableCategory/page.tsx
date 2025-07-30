@@ -76,6 +76,7 @@ const TableCategory: React.FC<TableCategoryProps> = ({
         dataSource={dataCategory?.data || []}
         pagination={{ pageSize: 5 }}
         bordered
+        scroll={{ x: "max-content" }}
       />
     </div>
   );

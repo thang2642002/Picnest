@@ -12,6 +12,7 @@ import {
   FolderOpenOutlined,
   ProfileOutlined,
 } from "@ant-design/icons";
+import "./header.scss";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -102,16 +103,23 @@ const AdminHeader = () => {
       {loading && <Spin tip="Đang chuyển trang..." />}
       <Header
         style={{
-          background: "#fff",
+          background: "#000",
           padding: "0 16px",
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
           height: 64,
-          borderBottom: "1px solid #f0f0f0",
+          borderBottom: "1px solid #000",
+          color: "#fff",
         }}
       >
-        <div style={{ fontWeight: "bold", fontSize: 18 }}>🐾 Admin Panel</div>
+        <div className="logo" onClick={() => router.push("/")}>
+          <img
+            src="https://vuoong.vn/images/logo.png"
+            alt="logo"
+            className="img-logo"
+          />
+        </div>
 
         {screens.md ? (
           <div style={{ display: "flex", alignItems: "center", gap: 24 }}>

@@ -1,0 +1,48 @@
+.logo {
+  font-weight: bold;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.logo .img-logo {
+  width: 110px;
+  height: 38px;
+  object-fit: cover;
+}
+
+:where(.css-dev-only-do-not-override-7t2xvq).ant-menu-light,
+:where(.css-dev-only-do-not-override-7t2xvq).ant-menu-light > .ant-menu {
+  color: #fff;
+  background: #000 !important;
+}
+
+:where(.css-dev-only-do-not-override-7t2xvq).ant-menu-light .ant-menu-item,
+:where(.css-dev-only-do-not-override-7t2xvq).ant-menu-light
+  > .ant-menu
+  .ant-menu-item,
+:where(.css-dev-only-do-not-override-7t2xvq).ant-menu-light
+  .ant-menu-submenu-title,
+:where(.css-dev-only-do-not-override-7t2xvq).ant-menu-light
+  > .ant-menu
+  .ant-menu-submenu-title {
+  color: #fff;
+}
+
+:where(.css-dev-only-do-not-override-7t2xvq).ant-menu-light
+  .ant-menu-item:not(.ant-menu-item-selected):not(
+    .ant-menu-submenu-selected
+  ):hover,
+:where(.css-dev-only-do-not-override-7t2xvq).ant-menu-light
+  > .ant-menu
+  .ant-menu-item:not(.ant-menu-item-selected):not(
+    .ant-menu-submenu-selected
+  ):hover,
+:where(.css-dev-only-do-not-override-7t2xvq).ant-menu-light
+  .ant-menu-item:not(.ant-menu-item-selected):not(.ant-menu-submenu-selected)
+  > .ant-menu-submenu-title:hover,
+:where(.css-dev-only-do-not-override-7t2xvq).ant-menu-light
+  > .ant-menu
+  .ant-menu-item:not(.ant-menu-item-selected):not(.ant-menu-submenu-selected)
+  > .ant-menu-submenu-title:hover {
+  color: #ffffffa6;
+}

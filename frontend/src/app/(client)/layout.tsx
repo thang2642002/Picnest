@@ -1,4 +1,3 @@
-// app/(client)/layout.tsx
 import Header from "@/app/(client)/home/Layout/Header/Header";
 import Container from "@/app/(client)/home/components/container";
 import { Bounce, ToastContainer } from "react-toastify";
