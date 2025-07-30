@@ -19,8 +19,10 @@ const TableUser: React.FC<TableUserProps> = ({
   const columns = [
     {
       title: "ID",
-      dataIndex: "id",
+      dataIndex: "user_id",
       key: "id",
+      width: 180,
+      render: (text: string) => `${text.slice(0, 8)}...`,
     },
     {
       title: "Tên đăng nhập",

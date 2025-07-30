@@ -1,135 +1,160 @@
 "use client";
 
-import React, { useState } from "react";
-import { Modal, Form, Input, Select, Image, message } from "antd";
+import { Modal, Form, Input, Upload, Button, message, Select } from "antd";
+import { PlusOutlined } from "@ant-design/icons";
+import { useState } from "react";
+import { toast } from "react-toastify";
+import type { UploadFile } from "antd/es/upload/interface";
+import imageServices from "@/app/services/image.services";
+import { ICategory } from "@/types/index";
 
-interface MenuModalProps {
+interface ModalCreateImageProps {
   show: boolean;
   setShow: React.Dispatch<React.SetStateAction<boolean>>;
-  onCreateImages: (
-    images: {
-      url: string;
-      title: string;
-      category_id: string;
-    }[]
-  ) => void;
+  category: ICategory[] | [];
+  handleGetAllImage: () => void;
 }
 
-const ModalCreateImage: React.FC<MenuModalProps> = ({
+const ModalCreateImage = ({
   show,
   setShow,
-  onCreateImages,
-}) => {
-  const { Option } = Select;
-  const [title, setTitle] = useState<string>("");
-  const [categories_id, setCategoriesId] = useState<string>("thể loại 1");
-  const [imageFiles, setImageFiles] = useState<File[]>([]);
-  const [previewUrls, setPreviewUrls] = useState<string[]>([]);
+  category,
+  handleGetAllImage,
+}: ModalCreateImageProps) => {
+  const [fileList, setFileList] = useState<UploadFile[]>([]);
+  const [titles, setTitles] = useState<string[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string>("");
 
   const handleCancel = () => {
     setShow(false);
-    setTitle("");
-    setCategoriesId("thể loại 1");
-    setImageFiles([]);
-    setPreviewUrls([]);
+    setFileList([]);
+    setTitles([]);
+    setSelectedCategoryId("");
   };
 
-  const handleOk = () => {
-    if (imageFiles.length < 1) {
-      return message.error("Vui lòng chọn ít nhất 1 ảnh.");
-    }
-    if (imageFiles.length > 10) {
-      return message.error("Chỉ được chọn tối đa 10 ảnh.");
-    }
+  const handleUploadChange = ({
+    fileList: newList,
+  }: {
+    fileList: UploadFile[];
+  }) => {
+    const existingNames = fileList.map((file) => file.name);
 
-    const newImages = imageFiles.map((file) => ({
-      url: URL.createObjectURL(file),
-      title: title || file.name,
-      category_id: categories_id,
-    }));
+    const filteredList = newList.filter((file) => {
+      if (existingNames.includes(file.name)) {
+        message.warning(`Ảnh "${file.name}" đã được chọn rồi.`);
+        return false;
+      }
+      return true;
+    });
 
-    onCreateImages(newImages);
-    handleCancel();
+    const updatedList = [...fileList, ...filteredList];
+    setFileList(updatedList);
+    setTitles(updatedList.map((_, i) => titles[i] || ""));
   };
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (!files) return;
+  const handleTitleChange = (index: number, value: string) => {
+    const newTitles = [...titles];
+    newTitles[index] = value;
+    setTitles(newTitles);
+  };
 
-    const selectedFiles = Array.from(files);
-    const allFiles = [...imageFiles, ...selectedFiles];
-
-    const uniqueFiles = Array.from(
-      new Map(
-        allFiles.map((file) => [`${file.name}-${file.lastModified}`, file])
-      ).values()
-    );
-    if (uniqueFiles.length > 10) {
-      message.warning("Chỉ được chọn tối đa 10 ảnh!");
+  const handleSubmit = async () => {
+    if (!selectedCategoryId) {
+      toast.warning("Vui lòng chọn danh mục.");
       return;
     }
 
-    setImageFiles(uniqueFiles);
-    setPreviewUrls(uniqueFiles.map((file) => URL.createObjectURL(file)));
+    if (fileList.length === 0) {
+      toast.warning("Vui lòng chọn ít nhất một ảnh.");
+      return;
+    }
 
-    e.target.value = "";
+    const hasEmptyTitle = titles.some((title) => !title.trim());
+    if (hasEmptyTitle) {
+      toast.warning("Vui lòng nhập đầy đủ tiêu đề cho tất cả ảnh.");
+      return;
+    }
+
+    const formData = new FormData();
+    fileList.forEach((file) => {
+      if (file.originFileObj) {
+        formData.append("images", file.originFileObj);
+      }
+    });
+    titles.forEach((title) => {
+      formData.append("titles", title);
+    });
+    formData.append("categories_id", selectedCategoryId);
+
+    setLoading(true);
+    try {
+      const res = await imageServices.createImage(formData);
+      if (res.errCode === 0) {
+        toast.success("Tải ảnh thành công!");
+        handleGetAllImage();
+        handleCancel();
+      } else {
+        toast.error(res.message || "Tải ảnh thất bại.");
+      }
+    } catch (error) {
+      toast.error("Đã xảy ra lỗi khi tải ảnh.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <Modal
-      title="Thêm nhiều hình ảnh"
+      title="Tạo mới hình ảnh"
       open={show}
-      onOk={handleOk}
       onCancel={handleCancel}
-      okText="Tạo"
-      cancelText="Hủy"
+      onOk={handleSubmit}
+      okText="Tải lên"
+      confirmLoading={loading}
     >
       <Form layout="vertical">
-        <Form.Item label="Tên ảnh (chung)">
-          <Input
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            placeholder="Tên sẽ áp dụng chung cho tất cả ảnh"
-          />
-        </Form.Item>
-
-        <Form.Item label="Menu">
+        <Form.Item label="Chọn danh mục ảnh" required>
           <Select
-            value={categories_id}
-            onChange={(value) => setCategoriesId(value)}
-            placeholder="Chọn thể loại"
+            placeholder="Chọn danh mục"
+            value={selectedCategoryId || undefined}
+            onChange={(value) => setSelectedCategoryId(value)}
           >
-            <Option value="thể loại 1">Thể loại 1</Option>
-            <Option value="thể loại 2">Thể loại 2</Option>
-            <Option value="thể loại 3">Thể loại 3</Option>
+            {category.map((cat) => (
+              <Select.Option key={cat.categories_id} value={cat.categories_id}>
+                {cat.name}
+              </Select.Option>
+            ))}
           </Select>
         </Form.Item>
 
-        <Form.Item label="Chọn ảnh (1–10 ảnh)">
-          <input
-            type="file"
-            accept="image/*"
+        <Form.Item label="Chọn ảnh (tối đa 10 ảnh)">
+          <Upload
             multiple
-            onChange={handleImageChange}
-          />
+            listType="picture-card"
+            fileList={fileList}
+            beforeUpload={() => false}
+            onChange={handleUploadChange}
+            maxCount={10}
+          >
+            {fileList.length >= 10 ? null : (
+              <div>
+                <PlusOutlined />
+                <div style={{ marginTop: 8 }}>Upload</div>
+              </div>
+            )}
+          </Upload>
         </Form.Item>
 
-        {previewUrls.length > 0 && (
-          <Form.Item label="Xem trước ảnh đã chọn">
-            <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
-              {previewUrls.map((url, index) => (
-                <Image
-                  key={index}
-                  src={url}
-                  alt={`Ảnh ${index + 1}`}
-                  width={100}
-                  height={100}
-                  style={{ objectFit: "cover", borderRadius: 6 }}
-                />
-              ))}
-            </div>
+        {fileList.map((file, index) => (
+          <Form.Item key={file.uid} label={`Tiêu đề ảnh ${index + 1}`} required>
+            <Input
+              value={titles[index]}
+              onChange={(e) => handleTitleChange(index, e.target.value)}
+              placeholder={`Nhập tiêu đề cho ảnh ${index + 1}`}
+            />
           </Form.Item>
-        )}
+        ))}
       </Form>
     </Modal>
   );

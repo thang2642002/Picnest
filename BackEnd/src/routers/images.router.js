@@ -4,6 +4,11 @@ import { upload } from "../config/cloudinary.js";
 const route = Router();
 
 route.get("/get-all-images", imageController.getAllImage);
+route.get("/get-url-images/:slug_url", imageController.getUrlImages);
+route.get(
+  "/get-category-images/:categories_id",
+  imageController.getCategoryImage
+);
 route.post(
   "/create-images",
   upload.array("images", 10),

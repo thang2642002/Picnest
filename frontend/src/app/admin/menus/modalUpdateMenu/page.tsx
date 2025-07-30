@@ -79,11 +79,11 @@ const ModalUpdateMenu: React.FC<MenuModalProps> = ({
             placeholder="Nhập tên menu..."
           />
         </Form.Item>
-        <Form.Item label="Slug">
+        <Form.Item label="Mô tả">
           <Input
             value={slug}
             onChange={(e) => setSlug(e.target.value)}
-            placeholder="Nhập slug..."
+            placeholder="Nhập mô tả..."
           />
         </Form.Item>
       </Form>

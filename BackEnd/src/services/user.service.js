@@ -6,7 +6,9 @@ const JWT_SECRET = process.env.JWT_SECRET || "jwt-secret";
 
 const getAllUser = async () => {
   try {
-    const data = await db.User.findAll();
+    const data = await db.User.findAll({
+      order: [["createdAt", "ASC"]],
+    });
     if (data) {
       return data;
     }

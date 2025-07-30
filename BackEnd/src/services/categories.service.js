@@ -1,4 +1,6 @@
 import db from "../models/index.js";
+import { slugify } from "../utils/slugify.js";
+
 const getAllCategories = async () => {
   try {
     const data = await db.Category.findAll({
@@ -8,6 +10,7 @@ const getAllCategories = async () => {
           as: "menu",
         },
       ],
+      order: [["createdAt", "ASC"]],
     });
     if (data) {
       return data;
@@ -20,8 +23,8 @@ const getAllCategories = async () => {
 
 const createCategories = async (name, slug, menu_id) => {
   try {
-    console.log(name, slug, menu_id);
-    const data = await db.Category.create({ name, slug, menu_id });
+    const slug_url = slugify(name);
+    const data = await db.Category.create({ name, slug, slug_url, menu_id });
     if (data) {
       return data;
     }
@@ -35,9 +38,11 @@ const updateCategories = async (categories_id, name, slug, menu_id) => {
   try {
     const data = await db.Category.findByPk(categories_id);
     if (data) {
+      const slug_url = slugify(name);
       await data.update({
         name,
         slug,
+        slug_url,
         menu_id,
       });
       return data;

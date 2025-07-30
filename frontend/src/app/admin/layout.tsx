@@ -1,5 +1,12 @@
+// app/admin/layout.tsx
 import AdminHeader from "@/app/admin/Layout/Header/header";
 import AdminFooter from "@/app/admin/Layout/Footer/footer";
+import "antd/dist/reset.css";
+
+export const metadata = {
+  title: "Admin Page",
+  description: "Admin layout",
+};
 
 export default function AdminLayout({
   children,

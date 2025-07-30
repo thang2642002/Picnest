@@ -1,31 +1,16 @@
 "use client";
 
-import { Button, Typography, Row, Col, message } from "antd";
+import { Button, Typography, Row, Col } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
+import { toast } from "react-toastify";
 import ModalCreateImage from "./ModalCreateImage/page";
 import ModalUpdateImage from "./ModalUpdateImage/page";
 import TableImage from "./TableImage/TableImage";
 import { useEffect, useState } from "react";
-import { IImage, ApiResponse } from "@/types/index";
+import { IImage, ApiResponse, ICategory } from "@/types/index";
 import imageServices from "@/app/services/image.services";
+import categoryServices from "@/app/services/category.services";
 const { Title } = Typography;
-
-const data = [
-  {
-    key: "1",
-    id: "U001",
-    url: "link 1",
-    title: "ảnh 2",
-    category_id: "thể loại 1",
-  },
-  {
-    key: "2",
-    id: "U002",
-    url: "link 2",
-    title: "ảnh 2",
-    category_id: "thể loại 2",
-  },
-];
 
 export default function Image() {
   const [dataImage, setDataImage] = useState<ApiResponse<IImage[]> | null>(
@@ -35,32 +20,28 @@ export default function Image() {
     useState<boolean>(false);
   const [showModalUpdateImage, setShowModalUpdateImage] =
     useState<boolean>(false);
-  const [images, setImages] = useState<any[]>([]); // ✅ Dữ liệu ảnh động
-  // ✅ Xử lý thêm ảnh từ Modal
-  const onCreateImages = (
-    newImages: {
-      url: string;
-      title: string;
-      category_id: string;
-    }[]
-  ) => {
-    const enhancedImages = newImages.map((img, index) => ({
-      ...img,
-      id: `IMG-${Date.now()}-${index}`, // tạo ID tạm
-      key: `IMG-${Date.now()}-${index}`,
-    }));
+  const [category, setCategory] = useState<ICategory[]>([]);
+  const [imageSelected, setImageSelected] = useState<IImage | null>(null);
 
-    setImages((prev) => [...enhancedImages, ...prev]); // thêm vào danh sách
-    message.success("Đã thêm ảnh thành công!");
-  };
-  const handleDelete = (key: string) => {
-    message.success(`Đã xóa ảnh có ID: ${key}`);
-    // TODO: gọi API xóa ở đây
+  const handleDelete = async (image_id: string) => {
+    try {
+      const response = await imageServices.deleteImage(image_id);
+      if (response && response.errCode === 0) {
+        toast.success("Xóa hình ảnh thành công");
+        handleGetAllImage();
+      } else {
+        toast.error("Xóa hình ảnh thất bại");
+      }
+    } catch (error) {
+      toast.error("Lỗi server rồi");
+      console.log(error);
+    }
   };
 
   const handleGetAllImage = async () => {
     try {
       const data = await imageServices.getAllImage();
+
       if (data && data.errCode === 0) {
         setDataImage(data);
       }
@@ -70,8 +51,22 @@ export default function Image() {
     }
   };
 
+  const handleGetAllCategory = async () => {
+    try {
+      const data = await categoryServices.getAllCategory();
+      if (data && data.errCode === 0 && data?.data) {
+        setCategory(data?.data);
+      } else {
+        setCategory([]);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     handleGetAllImage();
+    handleGetAllCategory();
   }, []);
 
   return (
@@ -97,19 +92,23 @@ export default function Image() {
       <ModalCreateImage
         show={showModalCreateImage}
         setShow={setShowModalCreateImage}
-        onCreateImages={onCreateImages}
+        category={category}
+        handleGetAllImage={handleGetAllImage}
       />
 
       <ModalUpdateImage
         show={showModalUpdateImage}
         setShow={setShowModalUpdateImage}
-        onCreateImages={onCreateImages}
+        imageSelected={imageSelected}
+        category={category}
+        handleGetAllImage={handleGetAllImage}
       />
 
       <TableImage
         dataImage={dataImage}
         setShowModalUpdateImage={setShowModalUpdateImage}
         handleDelete={handleDelete}
+        setImageSelected={setImageSelected}
       />
     </div>
   );

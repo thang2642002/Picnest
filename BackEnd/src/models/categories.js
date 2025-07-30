@@ -25,6 +25,7 @@ export default (sequelize) => {
       },
       name: DataTypes.STRING,
       slug: DataTypes.STRING,
+      slug_url: DataTypes.STRING,
       menu_id: {
         type: DataTypes.UUID,
         allowNull: false,

@@ -4,7 +4,36 @@ import { extractPublicId } from "../utils/cloudinaryHelper.js";
 
 const getAllImage = async () => {
   try {
-    const data = await db.Image.findAll();
+    const data = await db.Image.findAll({
+      include: [
+        {
+          model: db.Category,
+          as: "category",
+        },
+      ],
+      order: [["createdAt", "ASC"]],
+    });
+    if (data) {
+      return data;
+    }
+    return null;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const getCategoryImage = async (categories_id) => {
+  try {
+    const data = await db.Image.findAll({
+      where: { categories_id: categories_id },
+      include: [
+        {
+          model: db.Category,
+          as: "category",
+        },
+      ],
+      order: [["createdAt", "ASC"]],
+    });
     if (data) {
       return data;
     }
@@ -39,9 +68,7 @@ const createImage = async (categories_id, files, titles) => {
       title: titlesArray[index],
       categories_id,
     }));
-
     const created = await db.Image.bulkCreate(images);
-
     return {
       message: "Tạo ảnh thành công",
       errCode: 0,
@@ -103,4 +130,31 @@ const deleteImage = async (image_id) => {
   }
 };
 
-export default { getAllImage, createImage, updateImage, deleteImage };
+const getImagesBySlug = async (slug_url) => {
+  try {
+    const data = await db.Image.findAll({
+      include: [
+        {
+          model: db.Category,
+          as: "category",
+          where: { slug_url },
+          attributes: ["categories_id", "name", "slug_url"],
+        },
+      ],
+      order: [["createdAt", "ASC"]],
+    });
+
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export default {
+  getAllImage,
+  getCategoryImage,
+  createImage,
+  updateImage,
+  deleteImage,
+  getImagesBySlug,
+};

@@ -21,6 +21,8 @@ const TableCategory: React.FC<TableCategoryProps> = ({
       title: "ID",
       dataIndex: "categories_id",
       key: "id",
+      width: 180,
+      render: (text: string) => `${text.slice(0, 8)}...`,
     },
     {
       title: "Tên menu",

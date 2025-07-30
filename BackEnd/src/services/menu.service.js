@@ -7,14 +7,14 @@ const getAllMenu = async () => {
         {
           model: db.Category,
           as: "categories",
+          separate: true,
+          order: [["createdAt", "ASC"]],
         },
       ],
+      order: [["createdAt", "ASC"]],
     });
-    if (data) {
-      return data;
-    } else {
-      return;
-    }
+
+    return data ?? null;
   } catch (error) {
     console.log(error);
   }

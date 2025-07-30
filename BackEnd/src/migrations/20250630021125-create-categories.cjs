@@ -15,6 +15,9 @@ module.exports = {
       slug: {
         type: Sequelize.STRING,
       },
+      slug_url: {
+        type: Sequelize.STRING,
+      },
       menu_id: {
         type: Sequelize.UUID,
         allowNull: false,

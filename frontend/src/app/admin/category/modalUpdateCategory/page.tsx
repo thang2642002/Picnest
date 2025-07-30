@@ -78,18 +78,18 @@ const ModalUpdateCategory: React.FC<MenuModalProps> = ({
       cancelText="Hủy"
     >
       <Form layout="vertical">
-        <Form.Item label="Tên thể loại">
+        <Form.Item label="Thể loại">
           <Input
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="Nhập tên thể loại..."
           />
         </Form.Item>
-        <Form.Item label="Slug">
+        <Form.Item label="Mô tả ">
           <Input
             value={slug}
             onChange={(e) => setSlug(e.target.value)}
-            placeholder="Nhập sulg..."
+            placeholder="Nhập mô tả"
           />
         </Form.Item>
         <Form.Item label="Menu">

@@ -34,8 +34,8 @@ const ModalCreateCategory: React.FC<MenuModalProps> = ({
 
   const handleOk = async () => {
     try {
-      if (!name && !slug && menuId) {
-        toast.error("Vui lòng nhập đầy đủ thông tin");
+      if (!name && !slug && !menuId) {
+        toast.warning("Vui lòng nhập đầy đủ thông tin");
       } else {
         const data = await CategoryServices.createCategory({
           name,
@@ -66,18 +66,18 @@ const ModalCreateCategory: React.FC<MenuModalProps> = ({
       cancelText="Hủy"
     >
       <Form layout="vertical">
-        <Form.Item label="Tên quản trị">
+        <Form.Item label="Thể loại">
           <Input
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="Nhập tên thể loại..."
           />
         </Form.Item>
-        <Form.Item label="Slug">
+        <Form.Item label="Mô tả">
           <Input
             value={slug}
             onChange={(e) => setSlug(e.target.value)}
-            placeholder="Nhập sulg..."
+            placeholder="Nhập mô tả"
           />
         </Form.Item>
         <Form.Item label="Menu">
@@ -87,6 +87,9 @@ const ModalCreateCategory: React.FC<MenuModalProps> = ({
             placeholder="Chọn menu..."
             disabled={!menu}
           >
+            <Option value="" disabled>
+              Vui lòng chọn menu...
+            </Option>
             {menu?.map((menu) => (
               <Option key={menu.menu_id} value={menu.menu_id}>
                 {menu.name}
