@@ -15,6 +15,8 @@ import {
 import "./header.scss";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
+import Cookies from "js-cookie";
 
 const { Header } = Layout;
 const { useBreakpoint } = Grid;
@@ -25,16 +27,18 @@ const AdminHeader = () => {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  const handleLogOutUser = () => {
+    Cookies.remove("token");
+    Cookies.remove("user");
+    toast.success("Đăng xuất thành công!");
+    router.push("/login");
+  };
+
   const menuItems = [
     {
       key: "dashboard",
       icon: <HomeOutlined />,
       label: "Trang chủ",
-    },
-    {
-      key: "profile",
-      icon: <UserOutlined />,
-      label: "Tài khoản",
     },
     {
       key: "settings",
@@ -91,8 +95,8 @@ const AdminHeader = () => {
       case "user":
         router.push("/admin/user");
         break;
-      case "profile":
-        router.push("/admin/profile");
+      case "logout":
+        handleLogOutUser();
         break;
     }
     setLoading(false);

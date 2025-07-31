@@ -23,14 +23,15 @@ export default function UserPage() {
   const handleDelete = async (user_id: string) => {
     try {
       const res = await UserServices.deleteUser(user_id);
+
       if (res && res.errCode === 0) {
-        toast.success("Xóa menu thành công!");
+        toast.success("Xóa user thành công!");
         getAllUser();
       } else {
-        toast.error(res.message || "Xóa menu thất bại!");
+        toast.error(res.message || "Xóa user thất bại!");
       }
     } catch (err) {
-      console.error("Lỗi khi xóa menu:", err);
+      console.error("Lỗi khi xóa user:", err);
       toast.error("Đã xảy ra lỗi khi xóa!");
     }
   };
@@ -80,6 +81,7 @@ export default function UserPage() {
         setShow={setShowModalUpdateUser}
         userSelected={userSelected}
         dataUser={dataUser}
+        setUserSelected={setUserSelected}
       />
       <TableUser
         dataUser={dataUser}

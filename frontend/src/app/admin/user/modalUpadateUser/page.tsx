@@ -11,13 +11,14 @@ interface MenuModalProps {
   setShow: React.Dispatch<React.SetStateAction<boolean>>;
   userSelected: IUser | null;
   dataUser: ApiResponse<IUser[]> | null;
+  setUserSelected: React.Dispatch<React.SetStateAction<IUser | null>>;
 }
 
 const ModalUpdateUser: React.FC<MenuModalProps> = ({
   show,
   setShow,
   userSelected,
-  dataUser,
+  setUserSelected,
 }) => {
   const { Option } = Select;
   const [loading, setLoading] = useState<boolean>(false);
@@ -26,14 +27,16 @@ const ModalUpdateUser: React.FC<MenuModalProps> = ({
   const [password, setPassword] = useState<string>("");
   const [role, setRole] = useState<string>("Admin");
 
+  console.log("userSelected", userSelected);
+
   useEffect(() => {
     if (userSelected) {
-      setEmail(userSelected.email);
-      setName(userSelected.name);
-      setPassword(userSelected.password);
-      setRole(userSelected.role);
+      setEmail(userSelected?.email);
+      setName(userSelected?.name);
+      setPassword(userSelected?.password);
+      setRole(userSelected?.role);
     }
-  }, []);
+  }, [userSelected]);
 
   const handleCancel = () => {
     setShow(false);
@@ -41,6 +44,7 @@ const ModalUpdateUser: React.FC<MenuModalProps> = ({
     setEmail("");
     setPassword("");
     setRole("");
+    setUserSelected(null);
   };
 
   const handleUpdate = async () => {

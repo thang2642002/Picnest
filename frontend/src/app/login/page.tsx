@@ -5,6 +5,7 @@ import { Input, Button, Card, Typography, message } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
+import Cookies from "js-cookie";
 import "./login.scss";
 import userServices from "../services/user.services";
 import { UserLogin, IUser } from "@/types/index";
@@ -23,12 +24,17 @@ const LoginForm = () => {
       toast.error("Vui lòng nhập đầy đủ thông tin");
     }
     try {
-      const responsive = await userServices.loginUser(email, password);
-      if (responsive && responsive.errCode === 0) {
+      const response = await userServices.loginUser(email, password);
+      if (response && response.errCode === 0) {
         setLoading(true);
         toast.success("Đăng nhập thành công");
+        const { token, user } = response?.data || {};
+        if (token && user) {
+          Cookies.set("token", token, { expires: 7 });
+          Cookies.set("user", JSON.stringify(user), { expires: 7 });
+        }
         await new Promise((resolve) => setTimeout(resolve, 2000));
-        setDataUser(responsive.data || null);
+        setDataUser(response.data || null);
         router.push("/admin");
       } else {
         toast.success("Đăng nhập thất bại");

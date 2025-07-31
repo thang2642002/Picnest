@@ -36,7 +36,7 @@ const updateUser = async (
 
 const deleteUser = async (userId: string): Promise<ApiResponse> => {
   try {
-    const response = await axios.delete(`/users/update-user/${userId}`);
+    const response = await axios.delete(`/users/delete-user/${userId}`);
     return response.data;
   } catch (error) {
     console.log(error);

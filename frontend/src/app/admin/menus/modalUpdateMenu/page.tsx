@@ -11,6 +11,7 @@ interface MenuModalProps {
   setShow: React.Dispatch<React.SetStateAction<boolean>>;
   menuSelected: IMenu | null;
   handleGetAllMenu: () => void;
+  setMenuSelected: React.Dispatch<React.SetStateAction<IMenu | null>>;
 }
 
 const ModalUpdateMenu: React.FC<MenuModalProps> = ({
@@ -18,6 +19,7 @@ const ModalUpdateMenu: React.FC<MenuModalProps> = ({
   setShow,
   menuSelected,
   handleGetAllMenu,
+  setMenuSelected,
 }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [name, setName] = useState<string>("");
@@ -27,6 +29,7 @@ const ModalUpdateMenu: React.FC<MenuModalProps> = ({
     setShow(false);
     setName("");
     setSlug("");
+    setMenuSelected(null);
   };
 
   useEffect(() => {

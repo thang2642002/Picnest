@@ -5,9 +5,9 @@ import { ApiResponse, IMenu } from "@/app/types";
 
 interface TableMenuProps {
   dataMenu: ApiResponse<IMenu[]> | null;
-  setShowModalUpdateMenu: (value: boolean) => void;
+  setShowModalUpdateMenu: React.Dispatch<React.SetStateAction<boolean>>;
   handleDelete: (id: string) => void;
-  setMenuSelected: (menu: IMenu) => void;
+  setMenuSelected: React.Dispatch<React.SetStateAction<IMenu | null>>;
 }
 
 const TableMenu: React.FC<TableMenuProps> = ({

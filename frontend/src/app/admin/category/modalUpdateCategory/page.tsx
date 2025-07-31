@@ -10,7 +10,7 @@ interface MenuModalProps {
   show: boolean;
   setShow: React.Dispatch<React.SetStateAction<boolean>>;
   selectedCategory: ICategory | null;
-  setSelectedCategory: (category: ICategory | null) => void;
+  setSelectedCategory: React.Dispatch<React.SetStateAction<ICategory | null>>;
   menu: IMenu[] | [];
   getAllCategory: () => void;
 }

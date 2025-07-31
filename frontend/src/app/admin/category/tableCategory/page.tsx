@@ -5,9 +5,9 @@ import { ICategory, ApiResponse } from "@/types/index";
 
 interface TableCategoryProps {
   dataCategory: ApiResponse<ICategory[]> | null;
-  setShowModalUpdateCategory: (value: boolean) => void;
+  setShowModalUpdateCategory: React.Dispatch<React.SetStateAction<boolean>>;
   handleDelete: (id: string) => void;
-  setSelectedCategory: (category: ICategory) => void;
+  setSelectedCategory: React.Dispatch<React.SetStateAction<ICategory | null>>;
 }
 
 const TableCategory: React.FC<TableCategoryProps> = ({

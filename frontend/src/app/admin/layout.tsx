@@ -1,8 +1,5 @@
-// app/admin/layout.tsx
-import AdminHeader from "@/app/admin/Layout/Header/header";
-import AdminFooter from "@/app/admin/Layout/Footer/footer";
 import "antd/dist/reset.css";
-import { Bounce, ToastContainer } from "react-toastify";
+import AdminWrapper from "./components/AdminWrapper";
 
 export const metadata = {
   title: "Admin Page",
@@ -14,26 +11,5 @@ export default function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <>
-      <AdminHeader />
-      <main style={{ minHeight: "calc(100vh - 128px)", padding: 24 }}>
-        {children}
-      </main>
-      <AdminFooter />
-      <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick={false}
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-        transition={Bounce}
-      />
-    </>
-  );
+  return <AdminWrapper>{children}</AdminWrapper>;
 }

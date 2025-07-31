@@ -15,5 +15,5 @@ export interface UserPayload {
 
 export interface UserLogin<T = undefined> {
   token: string;
-  data?: T;
+  user: IUser;
 }

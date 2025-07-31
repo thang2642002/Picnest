@@ -6,9 +6,9 @@ import { IImage, ApiResponse } from "@/types/index";
 
 interface TableImageProps {
   dataImage: ApiResponse<IImage[]> | null;
-  setShowModalUpdateImage: (value: boolean) => void;
+  setShowModalUpdateImage: React.Dispatch<React.SetStateAction<boolean>>;
   handleDelete: (id: string) => void;
-  setImageSelected: (images: IImage) => void;
+  setImageSelected: React.Dispatch<React.SetStateAction<IImage | null>>;
 }
 
 const TableImage: React.FC<TableImageProps> = ({

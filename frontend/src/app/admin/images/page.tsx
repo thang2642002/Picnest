@@ -102,6 +102,7 @@ export default function Image() {
         imageSelected={imageSelected}
         category={category}
         handleGetAllImage={handleGetAllImage}
+        setImageSelected={setImageSelected}
       />
 
       <TableImage

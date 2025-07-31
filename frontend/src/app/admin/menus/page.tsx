@@ -80,6 +80,7 @@ export default function MenuPage() {
         setShow={setShowModalUpdateMenu}
         menuSelected={menuSelected}
         handleGetAllMenu={handleGetAllMenu}
+        setMenuSelected={setMenuSelected}
       />
       <TableMenu
         setShowModalUpdateMenu={setShowModalUpdateMenu}

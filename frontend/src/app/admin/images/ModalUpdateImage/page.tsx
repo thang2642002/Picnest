@@ -12,6 +12,7 @@ interface MenuModalProps {
   imageSelected: IImage | null;
   category: ICategory[] | [];
   handleGetAllImage: () => void;
+  setImageSelected: React.Dispatch<React.SetStateAction<IImage | null>>;
 }
 
 const ModalUpdateImage: React.FC<MenuModalProps> = ({
@@ -20,6 +21,7 @@ const ModalUpdateImage: React.FC<MenuModalProps> = ({
   imageSelected,
   category,
   handleGetAllImage,
+  setImageSelected,
 }) => {
   const { Option } = Select;
   const [title, setTitle] = useState<string>("");
@@ -34,6 +36,7 @@ const ModalUpdateImage: React.FC<MenuModalProps> = ({
     setCategoriesId("");
     setImageFiles([]);
     setPreviewUrls([]);
+    setImageSelected(null);
   };
 
   useEffect(() => {

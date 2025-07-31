@@ -5,9 +5,9 @@ import { IUser, ApiResponse } from "@/types/index";
 
 interface TableUserProps {
   dataUser: ApiResponse<IUser[]> | null;
-  setShowModalUpdateUser: (value: boolean) => void;
+  setShowModalUpdateUser: React.Dispatch<React.SetStateAction<boolean>>;
   handleDelete: (id: string) => void;
-  setUserSelected: (user: IUser) => void;
+  setUserSelected: React.Dispatch<React.SetStateAction<IUser | null>>;
 }
 
 const TableUser: React.FC<TableUserProps> = ({
